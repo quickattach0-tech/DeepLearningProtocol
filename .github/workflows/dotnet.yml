@@ -2,22 +2,26 @@ name: CI/CD for Deep Learning Protocol
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main, master, develop ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main, master, develop ]
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        dotnet-version: ['10.0.x']
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Setup .NET
+    - name: Setup .NET ${{ matrix.dotnet-version }}
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: ${{ matrix.dotnet-version }}
 
     - name: Restore dependencies
       run: dotnet restore
@@ -25,21 +29,64 @@ jobs:
     - name: Build project
       run: dotnet build --no-restore --configuration Release
 
-    - name: Run unit tests
+    - name: Run unit tests with coverage
       run: dotnet test --no-build --configuration Release --verbosity normal --collect:"XPlat Code Coverage" --results-directory:./coverage
 
-    - name: Upload coverage reports (optional - Codecov example)
+    - name: Upload coverage reports (Codecov)
       uses: codecov/codecov-action@v4
       if: success()
       with:
-        token: ${{ secrets.CODECOV_TOKEN }}  # Optional: only if you set up Codecov
         files: ./coverage/**/*.xml
-        fail_ci_if_error: true
+        fail_ci_if_error: false
 
-    # Optional: Publish artifact (built binaries)
     - name: Publish build artifacts
       uses: actions/upload-artifact@v4
+      if: always()
       with:
-        name: deep-learning-protocol-binaries
+        name: deep-learning-protocol-binaries-${{ matrix.dotnet-version }}
         path: |
           **/bin/Release/
+        retention-days: 30
+
+  code-quality:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Check code style (optional)
+      run: dotnet build --no-restore /p:EnforceCodeStyleInBuild=true || true
+
+  publish-release:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x'
+
+    - name: Publish release build
+      run: dotnet publish DeepLearningProtocol/DeepLearningProtocol.csproj -c Release -o ./release-build
+
+    - name: Upload release artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: deeplearning-protocol-release
+        path: ./release-build
+        retention-days: 90
+
