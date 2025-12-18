@@ -6,9 +6,40 @@ on:
   pull_request:
     branches: [ main, master, develop ]
 
+env:
+  DOTNET_VERSION: '10.0.x'
+  BUILD_CONFIGURATION: Release
+  ARTIFACT_RETENTION_DAYS: 30
+  RELEASE_ARTIFACT_RETENTION_DAYS: 90
+
 jobs:
+  # Debug/Analysis Build - Quick validation on all PRs and commits
+  debug-build:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' || github.ref != 'refs/heads/main'
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build project (Debug)
+      run: dotnet build --no-restore --configuration Debug
+
+    - name: Run unit tests (Debug)
+      run: dotnet test --no-build --configuration Debug --verbosity normal
+
+  # Production Release Build - Full testing and validation
   build-and-test:
     runs-on: ubuntu-latest
+    if: github.event_name == 'push'
     
     strategy:
       matrix:
@@ -26,11 +57,11 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
 
-    - name: Build project
-      run: dotnet build --no-restore --configuration Release
+    - name: Build project (Release)
+      run: dotnet build --no-restore --configuration ${{ env.BUILD_CONFIGURATION }}
 
     - name: Run unit tests with coverage
-      run: dotnet test --no-build --configuration Release --verbosity normal --collect:"XPlat Code Coverage" --results-directory:./coverage
+      run: dotnet test --no-build --configuration ${{ env.BUILD_CONFIGURATION }} --verbosity normal --collect:"XPlat Code Coverage" --results-directory:./coverage
 
     - name: Upload coverage reports (Codecov)
       uses: codecov/codecov-action@v4
@@ -46,10 +77,11 @@ jobs:
         name: deep-learning-protocol-binaries-${{ matrix.dotnet-version }}
         path: |
           **/bin/Release/
-        retention-days: 30
+        retention-days: ${{ env.ARTIFACT_RETENTION_DAYS }}
 
   code-quality:
     runs-on: ubuntu-latest
+    if: github.event_name == 'push'
     
     steps:
     - name: Checkout repository
@@ -58,7 +90,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '10.0.x'
+        dotnet-version: ${{ env.DOTNET_VERSION }}
 
     - name: Restore dependencies
       run: dotnet restore
@@ -66,6 +98,7 @@ jobs:
     - name: Check code style (optional)
       run: dotnet build --no-restore /p:EnforceCodeStyleInBuild=true || true
 
+  # Release Build Job - Creates optimized binaries for distribution
   publish-release:
     needs: build-and-test
     runs-on: ubuntu-latest
@@ -78,15 +111,51 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '10.0.x'
+        dotnet-version: ${{ env.DOTNET_VERSION }}
 
-    - name: Publish release build
-      run: dotnet publish DeepLearningProtocol/DeepLearningProtocol.csproj -c Release -o ./release-build
+    - name: Restore dependencies
+      run: dotnet restore
 
-    - name: Upload release artifact
+    - name: Build Release configuration
+      run: dotnet build --no-restore --configuration ${{ env.BUILD_CONFIGURATION }}
+
+    - name: Publish self-contained release (Linux x64)
+      run: dotnet publish DeepLearningProtocol/DeepLearningProtocol.csproj -c ${{ env.BUILD_CONFIGURATION }} -r linux-x64 -o ./release-build/linux-x64 --self-contained
+
+    - name: Publish self-contained release (Windows x64)
+      run: dotnet publish DeepLearningProtocol/DeepLearningProtocol.csproj -c ${{ env.BUILD_CONFIGURATION }} -r win-x64 -o ./release-build/win-x64 --self-contained
+
+    - name: Publish self-contained release (macOS x64)
+      run: dotnet publish DeepLearningProtocol/DeepLearningProtocol.csproj -c ${{ env.BUILD_CONFIGURATION }} -r osx-x64 -o ./release-build/osx-x64 --self-contained
+
+    - name: Publish framework-dependent release
+      run: dotnet publish DeepLearningProtocol/DeepLearningProtocol.csproj -c ${{ env.BUILD_CONFIGURATION }} -o ./release-build/framework-dependent
+
+    - name: Create release archive (Linux)
+      run: tar -czf release-build/deeplearning-protocol-linux-x64.tar.gz -C release-build linux-x64
+
+    - name: Create release archive (Windows)
+      run: cd release-build/win-x64 && zip -r ../deeplearning-protocol-win-x64.zip . && cd ../..
+
+    - name: Create release archive (macOS)
+      run: tar -czf release-build/deeplearning-protocol-osx-x64.tar.gz -C release-build osx-x64
+
+    - name: Create release archive (Framework-dependent)
+      run: tar -czf release-build/deeplearning-protocol-framework-dependent.tar.gz -C release-build framework-dependent
+
+    - name: Upload multi-platform release artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: deeplearning-protocol-release
-        path: ./release-build
-        retention-days: 90
+        name: deeplearning-protocol-release-multiplatform
+        path: |
+          release-build/deeplearning-protocol-*.tar.gz
+          release-build/deeplearning-protocol-*.zip
+        retention-days: ${{ env.RELEASE_ARTIFACT_RETENTION_DAYS }}
+
+    - name: Upload binaries artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: deeplearning-protocol-release-binaries
+        path: release-build/
+        retention-days: ${{ env.RELEASE_ARTIFACT_RETENTION_DAYS }}
 
