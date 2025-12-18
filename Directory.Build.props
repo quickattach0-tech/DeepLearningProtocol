@@ -1,0 +1,6 @@
+<Project>
+  <PropertyGroup>
+    <!-- Designate DeepLearningProtocol as the startup/runnable project -->
+    <StartupProject>DeepLearningProtocol</StartupProject>
+  </PropertyGroup>
+</Project>

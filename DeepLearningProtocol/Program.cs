@@ -31,16 +31,74 @@ namespace DeepLearningProtocol
         void UpdateState(string newState);
     }
 
+    // Simple Data Loss Prevention helper
+    // Implements basic rules to detect 'meme' or potentially large/binary content
+    // and preserves backups of previous states to prevent loss.
+    public class DataLossPrevention
+    {
+        private readonly string _backupDir = "./.dlp_backups";
+
+        public DataLossPrevention()
+        {
+            try
+            {
+                System.IO.Directory.CreateDirectory(_backupDir);
+            }
+            catch
+            {
+                // ignore errors creating backup dir in restricted environments
+            }
+        }
+
+        public bool IsPotentialMeme(string content)
+        {
+            if (string.IsNullOrEmpty(content)) return false;
+            var lower = content.ToLowerInvariant();
+            // simple heuristics: references to image files, base64 snippets, or word 'meme'
+            if (lower.Contains("meme") || lower.Contains(".png") || lower.Contains(".jpg") || lower.Contains(".jpeg") || lower.Contains("data:image") || lower.Contains("base64,"))
+                return true;
+            // long single-line content may be a pasted binary blob
+            if (content.Length > 200 && !content.Contains("\n")) return true;
+            return false;
+        }
+
+        public void BackupState(string state)
+        {
+            try
+            {
+                var file = System.IO.Path.Combine(_backupDir, $"state_{DateTime.UtcNow:yyyyMMdd_HHmmss_fff}.txt");
+                System.IO.File.WriteAllText(file, state ?? string.Empty);
+            }
+            catch
+            {
+                // best-effort backup; swallow IO errors
+            }
+        }
+    }
+
     // Main Deep Learning Protocol class
     public class DeepLearningProtocol : AbstractCore, IAimInterface, IDepthInterface, IStateInterface
     {
         private string _currentState = "Initial";
         private string _aim = "General Reasoning";
+        private readonly DataLossPrevention _dlp = new();
 
         public string GetCurrentState() => _currentState;
 
         public void UpdateState(string newState)
         {
+            // backup current state before changing
+            try { _dlp.BackupState(_currentState); } catch { }
+
+            // If the incoming state looks like a meme or binary payload, prevent accidental loss
+            if (_dlp.IsPotentialMeme(newState))
+            {
+                Console.WriteLine("DLP: Potential meme-like content detected. State update blocked and backed up.");
+                // mark state as restricted but preserve previous
+                _currentState = $"[DLP-BLOCKED]";
+                return;
+            }
+
             _currentState = newState;
             Console.WriteLine($"State updated: {_currentState}");
         }
