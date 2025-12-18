@@ -18,6 +18,7 @@
 | [Architecture.md](docs/Architecture.md) | 9.2KB | Developers | System design, components, data flow |
 | [Testing.md](docs/Testing.md) | 7.5KB | Test Writers | Test suite, writing tests, best practices |
 | [DLP-Guide.md](docs/DLP-Guide.md) | 10.1KB | Security-focused | Data protection, detection rules, backups |
+| [Instruction-Wiki.md](docs/Instruction-Wiki.md) | 8.5KB | All Users | Core architecture, interfaces, implementation |
 | [Wiki-Home.md](docs/Wiki-Home.md) | 4.2KB | Wiki Visitors | Navigation, overview, quick links |
 | [Wiki-Setup.md](docs/Wiki-Setup.md) | 5.8KB | Wiki Admins | Wiki setup, synchronization, management |
 | [Foreign-Education.md](docs/Foreign-Education.md) | 12KB | Int'l Educators | Adaptation for foreign education systems |
