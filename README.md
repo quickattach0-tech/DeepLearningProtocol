@@ -2,6 +2,8 @@
 
 A conceptual C# implementation inspired by a hierarchical deep learning architecture diagram.
 
+[![CI/CD Status](https://github.com/quickattach0-tech/DeepLearningProtocol/actions/workflows/dotnet.yml/badge.svg)](https://github.com/quickattach0-tech/DeepLearningProtocol/actions/workflows/dotnet.yml)
+
 ## Structure
 - **AbstractCore**: Deepest reasoning layer (maroon node)
 - **State Interface**: Top-level state management
@@ -25,8 +27,3 @@ Feel free to extend with neural network integrations, async processing, or more 
 1. Install dependencies: `dotnet restore`
 2. Run tests: `dotnet test`
 3. See 100% coverage on core methods!
-
-[![CI/CD Status](https://github.com/quickattach0-tech/DeepLearningProtocol/actions/workflows/dotnet.yml/badge.svg)](https://github.com/quickattach0-tech/DeepLearningProtocol/actions/workflows/dotnet.yml)
-
-# Deep Learning Protocol
-...
