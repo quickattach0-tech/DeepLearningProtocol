@@ -1,0 +1,39 @@
+{
+  "version": 2,
+  "dgSpecHash": "nm22UwgraQQ=",
+  "success": true,
+  "projectFilePath": "/workspaces/DeepLearningProtocol/DeepLearningProtocol/DeepLearningProtocol.csproj",
+  "expectedPackageFiles": [
+    "/home/codespace/.nuget/packages/microsoft.codecoverage/17.12.0/microsoft.codecoverage.17.12.0.nupkg.sha512",
+    "/home/codespace/.nuget/packages/microsoft.net.test.sdk/17.12.0/microsoft.net.test.sdk.17.12.0.nupkg.sha512",
+    "/home/codespace/.nuget/packages/microsoft.testplatform.objectmodel/17.12.0/microsoft.testplatform.objectmodel.17.12.0.nupkg.sha512",
+    "/home/codespace/.nuget/packages/microsoft.testplatform.testhost/17.12.0/microsoft.testplatform.testhost.17.12.0.nupkg.sha512",
+    "/home/codespace/.nuget/packages/newtonsoft.json/13.0.1/newtonsoft.json.13.0.1.nupkg.sha512",
+    "/home/codespace/.nuget/packages/system.reflection.metadata/1.6.0/system.reflection.metadata.1.6.0.nupkg.sha512",
+    "/home/codespace/.nuget/packages/xunit/2.9.2/xunit.2.9.2.nupkg.sha512",
+    "/home/codespace/.nuget/packages/xunit.abstractions/2.0.3/xunit.abstractions.2.0.3.nupkg.sha512",
+    "/home/codespace/.nuget/packages/xunit.analyzers/1.16.0/xunit.analyzers.1.16.0.nupkg.sha512",
+    "/home/codespace/.nuget/packages/xunit.assert/2.9.2/xunit.assert.2.9.2.nupkg.sha512",
+    "/home/codespace/.nuget/packages/xunit.core/2.9.2/xunit.core.2.9.2.nupkg.sha512",
+    "/home/codespace/.nuget/packages/xunit.extensibility.core/2.9.2/xunit.extensibility.core.2.9.2.nupkg.sha512",
+    "/home/codespace/.nuget/packages/xunit.extensibility.execution/2.9.2/xunit.extensibility.execution.2.9.2.nupkg.sha512",
+    "/home/codespace/.nuget/packages/xunit.runner.visualstudio/3.0.0/xunit.runner.visualstudio.3.0.0.nupkg.sha512",
+    "/home/codespace/.nuget/packages/microsoft.netcore.app.ref/8.0.22/microsoft.netcore.app.ref.8.0.22.nupkg.sha512",
+    "/home/codespace/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.22/microsoft.aspnetcore.app.ref.8.0.22.nupkg.sha512",
+    "/home/codespace/.nuget/packages/microsoft.netcore.app.host.linux-x64/8.0.22/microsoft.netcore.app.host.linux-x64.8.0.22.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1603",
+      "level": "Warning",
+      "message": "DeepLearningProtocol depends on xunit.runner.visualstudio (>= 2.9.2) but xunit.runner.visualstudio 2.9.2 was not found. xunit.runner.visualstudio 3.0.0 was resolved instead.",
+      "projectPath": "/workspaces/DeepLearningProtocol/DeepLearningProtocol/DeepLearningProtocol.csproj",
+      "warningLevel": 1,
+      "filePath": "/workspaces/DeepLearningProtocol/DeepLearningProtocol/DeepLearningProtocol.csproj",
+      "libraryId": "xunit.runner.visualstudio",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    }
+  ]
+}
