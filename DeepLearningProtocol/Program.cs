@@ -142,17 +142,49 @@ namespace DeepLearningProtocol
         {
             var protocol = new DeepLearningProtocol();
 
-            Console.WriteLine($"Initial state: {protocol.GetCurrentState()}");
+            Console.WriteLine("=== Deep Learning Protocol Interactive Console ===\n");
+            Console.WriteLine($"Initial state: {protocol.GetCurrentState()}\n");
+
+            // Prompt user for input
+            Console.Write("Enter your question or input (or press Enter for default): ");
+            var userInput = Console.ReadLine();
+            var initialInput = string.IsNullOrWhiteSpace(userInput) ? "Raw sensory data" : userInput;
+
+            Console.Write("Enter your goal (or press Enter for default): ");
+            var userGoal = Console.ReadLine();
+            var goal = string.IsNullOrWhiteSpace(userGoal) ? "Solve complex problem" : userGoal;
+
+            Console.Write("Enter processing depth (1-10, or press Enter for default 5): ");
+            var userDepthStr = Console.ReadLine();
+            var depth = 5;
+            if (!string.IsNullOrWhiteSpace(userDepthStr) && int.TryParse(userDepthStr, out var depthValue) && depthValue > 0 && depthValue <= 10)
+            {
+                depth = depthValue;
+            }
+
+            Console.WriteLine($"\n--- Processing: Input='{initialInput}', Goal='{goal}', Depth={depth} ---\n");
 
             var result = protocol.ExecuteProtocol(
-                initialInput: "Raw sensory data",
-                goal: "Solve complex problem",
-                depth: 5
+                initialInput: initialInput,
+                goal: goal,
+                depth: depth
             );
 
-            Console.WriteLine("\nResult:");
+            Console.WriteLine("\n--- Result ---");
             Console.WriteLine(result);
             Console.WriteLine($"\nFinal State: {protocol.GetCurrentState()}");
+
+            Console.WriteLine("\n--- Ask Another Question? (y/n) ---");
+            var again = Console.ReadLine();
+            if (again?.ToLower() == "y")
+            {
+                // Recursively call Main to allow multiple questions
+                Main(args);
+            }
+            else
+            {
+                Console.WriteLine("Thank you for using the Deep Learning Protocol!");
+            }
         }
     }
 }
