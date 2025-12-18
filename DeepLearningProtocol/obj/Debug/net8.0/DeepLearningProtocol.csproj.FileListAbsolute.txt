@@ -1,0 +1,6 @@
+/workspaces/DeepLearningProtocol/DeepLearningProtocol/obj/Debug/net8.0/DeepLearningProtocol.csproj.AssemblyReference.cache
+/workspaces/DeepLearningProtocol/DeepLearningProtocol/obj/Debug/net8.0/DeepLearningProtocol.GeneratedMSBuildEditorConfig.editorconfig
+/workspaces/DeepLearningProtocol/DeepLearningProtocol/obj/Debug/net8.0/DeepLearningProtocol.AssemblyInfoInputs.cache
+/workspaces/DeepLearningProtocol/DeepLearningProtocol/obj/Debug/net8.0/DeepLearningProtocol.AssemblyInfo.cs
+/workspaces/DeepLearningProtocol/DeepLearningProtocol/obj/Debug/net8.0/DeepLearningProtocol.csproj.CoreCompileInputs.cache
+/workspaces/DeepLearningProtocol/DeepLearningProtocol/obj/Debug/net8.0/DeepLearningProtocol.sourcelink.json

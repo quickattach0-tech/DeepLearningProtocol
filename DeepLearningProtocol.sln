@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9966171e-c69b-482f-ace8-6e8dc33fa1cc}") = "DeepLearningProtocol", "DeepLearningProtocol\DeepLearningProtocol.csproj", "{YOUR-GUID-HERE}"
+Project("{9966171e-c69b-482f-ace8-6e8dc33fa1cc}") = "DeepLearningProtocol", "DeepLearningProtocol\DeepLearningProtocol.csproj", "{9966171e-c69b-482f-ace8-6e8dc33fa1cc}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
