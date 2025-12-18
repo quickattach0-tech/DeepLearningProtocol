@@ -1,0 +1,15 @@
+/workspaces/DeepLearningProtocol/DeepLearningProtocol/bin/Debug/net10.0/DeepLearningProtocol
+/workspaces/DeepLearningProtocol/DeepLearningProtocol/bin/Debug/net10.0/DeepLearningProtocol.deps.json
+/workspaces/DeepLearningProtocol/DeepLearningProtocol/bin/Debug/net10.0/DeepLearningProtocol.runtimeconfig.json
+/workspaces/DeepLearningProtocol/DeepLearningProtocol/bin/Debug/net10.0/DeepLearningProtocol.dll
+/workspaces/DeepLearningProtocol/DeepLearningProtocol/bin/Debug/net10.0/DeepLearningProtocol.pdb
+/workspaces/DeepLearningProtocol/DeepLearningProtocol/obj/Debug/net10.0/DeepLearningProtocol.GeneratedMSBuildEditorConfig.editorconfig
+/workspaces/DeepLearningProtocol/DeepLearningProtocol/obj/Debug/net10.0/DeepLearningProtocol.AssemblyInfoInputs.cache
+/workspaces/DeepLearningProtocol/DeepLearningProtocol/obj/Debug/net10.0/DeepLearningProtocol.AssemblyInfo.cs
+/workspaces/DeepLearningProtocol/DeepLearningProtocol/obj/Debug/net10.0/DeepLearningProtocol.csproj.CoreCompileInputs.cache
+/workspaces/DeepLearningProtocol/DeepLearningProtocol/obj/Debug/net10.0/DeepLearningProtocol.sourcelink.json
+/workspaces/DeepLearningProtocol/DeepLearningProtocol/obj/Debug/net10.0/DeepLearningProtocol.dll
+/workspaces/DeepLearningProtocol/DeepLearningProtocol/obj/Debug/net10.0/refint/DeepLearningProtocol.dll
+/workspaces/DeepLearningProtocol/DeepLearningProtocol/obj/Debug/net10.0/DeepLearningProtocol.pdb
+/workspaces/DeepLearningProtocol/DeepLearningProtocol/obj/Debug/net10.0/DeepLearningProtocol.genruntimeconfig.cache
+/workspaces/DeepLearningProtocol/DeepLearningProtocol/obj/Debug/net10.0/ref/DeepLearningProtocol.dll
