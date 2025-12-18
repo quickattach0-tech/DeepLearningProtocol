@@ -20,11 +20,13 @@
 | [DLP-Guide.md](docs/DLP-Guide.md) | 10.1KB | Security-focused | Data protection, detection rules, backups |
 | [Wiki-Home.md](docs/Wiki-Home.md) | 4.2KB | Wiki Visitors | Navigation, overview, quick links |
 | [Wiki-Setup.md](docs/Wiki-Setup.md) | 5.8KB | Wiki Admins | Wiki setup, synchronization, management |
+| [Foreign-Education.md](docs/Foreign-Education.md) | 12KB | Int'l Educators | Adaptation for foreign education systems |
 
-### Contributing & License
+### Contributing & Policy
 | File | Size | Purpose |
 |------|------|---------|
 | [CONTRIBUTING.md](CONTRIBUTING.md) | 9.3KB | Contribution guidelines, workflow, code style |
+| [DISTRIBUTION_POLICY.md](DISTRIBUTION_POLICY.md) | 15KB | Distribution, commercial use, licensing |
 | [LICENSE](LICENSE) | 1.1KB | MIT License (or your license) |
 
 ---
@@ -86,14 +88,16 @@
 - **Features:** 1 guide (DLP-Guide)
 - **Testing:** 1 guide (Testing)
 - **Development:** 1 guide (Contributing)
+- **International Education:** 1 guide (Foreign-Education)
 - **Wiki:** 2 guides (Wiki-Home, Wiki-Setup)
+- **Policy & Licensing:** 2 files (Distribution-Policy, License)
 - **Reference:** 3 files (README, DOCUMENTATION_SUMMARY, DOCS_INDEX)
 
 ### Total
-- **Files:** 11 total
-- **Size:** ~70+ KB of documentation
-- **Coverage:** All major topics
-- **Links:** 50+ cross-references
+- **Files:** 14 total
+- **Size:** ~130+ KB of documentation
+- **Coverage:** All major topics including international education & licensing
+- **Links:** 70+ cross-references
 
 ---
 
