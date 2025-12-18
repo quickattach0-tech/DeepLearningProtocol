@@ -4,6 +4,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9966171e-c69b-482f-ace8-6e8dc33fa1cc}") = "DeepLearningProtocol", "DeepLearningProtocol\DeepLearningProtocol.csproj", "{9966171e-c69b-482f-ace8-6e8dc33fa1cc}"
 EndProject
+Project("{9966171e-c69b-482f-ace8-6e8dc33fa1cc}") = "DeepLearningProtocol.Tests", "DeepLearningProtocol.Tests\DeepLearningProtocol.Tests.csproj", "{a1b2c3d4-e5f6-4789-abc0-def123456789}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -14,5 +16,11 @@ Global
 		{9966171e-c69b-482f-ace8-6e8dc33fa1cc}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9966171e-c69b-482f-ace8-6e8dc33fa1cc}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9966171e-c69b-482f-ace8-6e8dc33fa1cc}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(StartupProject) = preSolution
+		{9966171e-c69b-482f-ace8-6e8dc33fa1cc}
 	EndGlobalSection
 EndGlobal

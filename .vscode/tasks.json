@@ -17,21 +17,24 @@
             },
             "presentation": {
                 "reveal": "always"
-            }
+            },
+            "problemMatcher": []
         },
         {
             "label": "dotnet build",
             "command": "dotnet",
             "type": "shell",
             "args": ["build"],
-            "group": "build"
+            "group": "build",
+            "problemMatcher": []
         },
         {
             "label": "dotnet test",
             "command": "dotnet",
             "type": "shell",
             "args": ["test"],
-            "group": "test"
+            "group": "test",
+            "problemMatcher": []
         }
     ]
 }
