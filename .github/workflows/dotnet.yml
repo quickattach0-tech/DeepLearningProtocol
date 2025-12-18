@@ -1,0 +1,45 @@
+name: CI/CD for Deep Learning Protocol
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build project
+      run: dotnet build --no-restore --configuration Release
+
+    - name: Run unit tests
+      run: dotnet test --no-build --configuration Release --verbosity normal --collect:"XPlat Code Coverage" --results-directory:./coverage
+
+    - name: Upload coverage reports (optional - Codecov example)
+      uses: codecov/codecov-action@v4
+      if: success()
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}  # Optional: only if you set up Codecov
+        files: ./coverage/**/*.xml
+        fail_ci_if_error: true
+
+    # Optional: Publish artifact (built binaries)
+    - name: Publish build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: deep-learning-protocol-binaries
+        path: |
+          **/bin/Release/
