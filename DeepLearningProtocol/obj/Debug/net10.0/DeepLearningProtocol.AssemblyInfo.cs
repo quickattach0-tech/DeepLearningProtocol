@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DeepLearningProtocol")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3001819afbf442d1e2fca4a78f62c12db1074375")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+19879b7f89df322173e47fbf9ce4e088c0dabe84")]
 [assembly: System.Reflection.AssemblyProductAttribute("DeepLearningProtocol")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DeepLearningProtocol")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
