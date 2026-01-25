@@ -74,13 +74,28 @@ namespace DeepLearningProtocol
         }
 
         /// <summary>
-        /// Initialize workflow logging directory
+        /// Initialize workflow logging directory with error handling
         /// </summary>
         private void InitializeWorkflowDirectory()
         {
-            if (!Directory.Exists(_workflowLogPath))
+            try
             {
-                Directory.CreateDirectory(_workflowLogPath);
+                if (!Directory.Exists(_workflowLogPath))
+                {
+                    Directory.CreateDirectory(_workflowLogPath);
+                }
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                Console.WriteLine($"⚠️ WARNING: Cannot access workflow directory at {_workflowLogPath}");
+                Console.WriteLine($"   Error: {ex.Message}");
+                Console.WriteLine($"   Fallback: Workflow logs will be output to console only.");
+            }
+            catch (IOException ex)
+            {
+                Console.WriteLine($"⚠️ WARNING: Cannot create workflow directory at {_workflowLogPath}");
+                Console.WriteLine($"   Error: {ex.Message}");
+                Console.WriteLine($"   Fallback: Workflow logs will be output to console only.");
             }
         }
 
@@ -205,13 +220,72 @@ namespace DeepLearningProtocol
         }
 
         /// <summary>
-        /// Save workflow to JSON file
+        /// Safe logging with fallback to console if file I/O fails
+        /// </summary>
+        private void SafeLog(string message)
+        {
+            try
+            {
+                if (!Directory.Exists(_workflowLogPath))
+                {
+                    Directory.CreateDirectory(_workflowLogPath);
+                }
+                
+                var logFile = Path.Combine(_workflowLogPath, "workflow_log.txt");
+                File.AppendAllText(logFile, $"[{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss}] {message}{Environment.NewLine}");
+            }
+            catch
+            {
+                // Fallback to console if file operations fail
+                Console.WriteLine($"[LOG] {message}");
+            }
+        }
+
+        /// <summary>
+        /// Save workflow to JSON file with error handling
         /// </summary>
         public void SaveWorkflowToFile(string workflowName)
         {
-            var fileName = Path.Combine(_workflowLogPath, $"workflow_{workflowName}_{DateTime.UtcNow:yyyyMMdd_HHmmss}.json");
-            var json = JsonSerializer.Serialize(_stages, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(fileName, json);
+            try
+            {
+                // Ensure directory exists
+                if (!Directory.Exists(_workflowLogPath))
+                {
+                    Directory.CreateDirectory(_workflowLogPath);
+                }
+
+                var fileName = Path.Combine(_workflowLogPath, $"workflow_{workflowName}_{DateTime.UtcNow:yyyyMMdd_HHmmss}.json");
+                var json = JsonSerializer.Serialize(_stages, new JsonSerializerOptions { WriteIndented = true });
+                File.WriteAllText(fileName, json);
+                Console.WriteLine($"✓ Workflow saved: {fileName}");
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                Console.WriteLine($"✗ ERROR: Access denied when saving workflow.");
+                Console.WriteLine($"   Path: {_workflowLogPath}");
+                Console.WriteLine($"   Details: {ex.Message}");
+                Console.WriteLine($"   Fallback: Workflow data logged to console above.");
+            }
+            catch (DirectoryNotFoundException ex)
+            {
+                Console.WriteLine($"✗ ERROR: Workflow directory not found.");
+                Console.WriteLine($"   Path: {_workflowLogPath}");
+                Console.WriteLine($"   Details: {ex.Message}");
+                Console.WriteLine($"   Fallback: Workflow data logged to console above.");
+            }
+            catch (IOException ex)
+            {
+                Console.WriteLine($"✗ ERROR: I/O error while saving workflow.");
+                Console.WriteLine($"   Details: {ex.Message}");
+                Console.WriteLine($"   Fallback: Workflow data logged to console above.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"✗ ERROR: Unexpected error while saving workflow.");
+                Console.WriteLine($"   Type: {ex.GetType().Name}");
+                Console.WriteLine($"   Message: {ex.Message}");
+                Console.WriteLine($"   Fallback: Workflow data logged to console above.");
+            }
         }
 
         /// <summary>
