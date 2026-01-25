@@ -100,8 +100,10 @@ namespace DeepLearningProtocol
                 Console.WriteLine("2. View FAQ");
                 Console.WriteLine("3. Translate Text");
                 Console.WriteLine("4. View System Data Map");
-                Console.WriteLine("5. Exit\n");
-                Console.Write("Choose an option (1-5): ");
+                Console.WriteLine("5. Translate & Store Text");
+                Console.WriteLine("6. Manage Translation Rules");
+                Console.WriteLine("7. Exit\n");
+                Console.Write("Choose an option (1-7): ");
 
                 var choice = Console.ReadLine();
                 switch (choice)
@@ -119,6 +121,12 @@ namespace DeepLearningProtocol
                         DisplaySystemDataMap();
                         break;
                     case "5":
+                        TranslateAndStoreText();
+                        break;
+                    case "6":
+                        ManageTranslationRules();
+                        break;
+                    case "7":
                         Console.WriteLine("\nThank you for using Deep Learning Protocol!");
                         return;
                     default:
@@ -437,6 +445,210 @@ namespace DeepLearningProtocol
                 if (again?.ToLower() != "y")
                 {
                     break; // Exit interactive protocol loop
+                }
+            }
+        }
+
+        /// <summary>
+        /// Translates text from console input and stores it in the database.
+        /// </summary>
+        private static void TranslateAndStoreText()
+        {
+            using (var context = new ProtocolDbContext())
+            {
+                var manager = new TranslationManager(context);
+
+                while (true)
+                {
+                    Console.Clear();
+                    Console.WriteLine("╔════════════════════════════════════════════════════════╗");
+                    Console.WriteLine("║         Translate & Store Text to Database             ║");
+                    Console.WriteLine("╚════════════════════════════════════════════════════════╝\n");
+
+                    Console.Write("Enter text to translate (or 'back' to return): ");
+                    var text = Console.ReadLine();
+
+                    if (text?.ToLower() == "back")
+                        break;
+
+                    if (string.IsNullOrWhiteSpace(text))
+                    {
+                        Console.WriteLine("\nNo text entered. Press Enter to continue...");
+                        Console.ReadLine();
+                        continue;
+                    }
+
+                    try
+                    {
+                        var translated = manager.TranslateAndStore(text);
+
+                        Console.WriteLine("\n--- Translation Stored Successfully ---");
+                        Console.WriteLine($"ID: {translated.Id}");
+                        Console.WriteLine($"Spanish: {translated.SpanishTranslation}");
+                        Console.WriteLine($"Arabic: {translated.ArabicTranslation}");
+                        Console.WriteLine($"French: {translated.FrenchTranslation}");
+                        Console.WriteLine($"\nQuality Score: {translated.QualityScore}/100");
+
+                        Console.Write("\nPress Enter to continue...");
+                        Console.ReadLine();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"\n[ERROR] {ex.Message}");
+                        Console.Write("Press Enter to continue...");
+                        Console.ReadLine();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Manages translation rules - create, update, delete, and view.
+        /// </summary>
+        private static void ManageTranslationRules()
+        {
+            using (var context = new ProtocolDbContext())
+            {
+                var manager = new TranslationManager(context);
+
+                while (true)
+                {
+                    Console.Clear();
+                    Console.WriteLine("╔════════════════════════════════════════════════════════╗");
+                    Console.WriteLine("║          Manage Translation Rules                     ║");
+                    Console.WriteLine("╚════════════════════════════════════════════════════════╝\n");
+
+                    Console.WriteLine("1. View All Rules");
+                    Console.WriteLine("2. Create New Rule");
+                    Console.WriteLine("3. Update Rule");
+                    Console.WriteLine("4. Delete Rule");
+                    Console.WriteLine("5. View Translation History");
+                    Console.WriteLine("6. Back to Main Menu\n");
+
+                    Console.Write("Choose an option (1-6): ");
+                    var choice = Console.ReadLine();
+
+                    switch (choice)
+                    {
+                        case "1":
+                            manager.DisplayAllRules();
+                            break;
+
+                        case "2":
+                            Console.Clear();
+                            Console.WriteLine("╔════════════════════════════════════════════════════════╗");
+                            Console.WriteLine("║              Create Translation Rule                  ║");
+                            Console.WriteLine("╚════════════════════════════════════════════════════════╝\n");
+
+                            Console.Write("Enter source text (English): ");
+                            var source = Console.ReadLine();
+
+                            if (string.IsNullOrWhiteSpace(source))
+                            {
+                                Console.WriteLine("\nSource text cannot be empty. Press Enter...");
+                                Console.ReadLine();
+                                break;
+                            }
+
+                            Console.Write("Enter Spanish translation: ");
+                            var spanish = Console.ReadLine() ?? string.Empty;
+
+                            Console.Write("Enter Arabic translation: ");
+                            var arabic = Console.ReadLine() ?? string.Empty;
+
+                            Console.Write("Enter French translation: ");
+                            var french = Console.ReadLine() ?? string.Empty;
+
+                            Console.Write("Enter category (default: Custom): ");
+                            var category = Console.ReadLine() ?? "Custom";
+
+                            Console.Write("Enter priority 1-10 (default: 5): ");
+                            int priority = int.TryParse(Console.ReadLine(), out var p) ? p : 5;
+
+                            if (manager.CreateRule(source, spanish, arabic, french, category, priority))
+                                Console.WriteLine("\n✓ Rule created successfully!");
+                            else
+                                Console.WriteLine("\n✗ Rule already exists or error occurred.");
+
+                            Console.Write("Press Enter to continue...");
+                            Console.ReadLine();
+                            break;
+
+                        case "3":
+                            Console.Clear();
+                            Console.WriteLine("╔════════════════════════════════════════════════════════╗");
+                            Console.WriteLine("║              Update Translation Rule                  ║");
+                            Console.WriteLine("╚════════════════════════════════════════════════════════╝\n");
+
+                            Console.Write("Enter source text to update: ");
+                            var sourceToUpdate = Console.ReadLine();
+
+                            if (string.IsNullOrWhiteSpace(sourceToUpdate))
+                            {
+                                Console.WriteLine("\nSource text cannot be empty. Press Enter...");
+                                Console.ReadLine();
+                                break;
+                            }
+
+                            Console.Write("Enter new Spanish translation (leave blank to skip): ");
+                            var newSpanish = Console.ReadLine();
+
+                            Console.Write("Enter new Arabic translation (leave blank to skip): ");
+                            var newArabic = Console.ReadLine();
+
+                            Console.Write("Enter new French translation (leave blank to skip): ");
+                            var newFrench = Console.ReadLine();
+
+                            if (manager.UpdateRule(sourceToUpdate, newSpanish, newArabic, newFrench))
+                                Console.WriteLine("\n✓ Rule updated successfully!");
+                            else
+                                Console.WriteLine("\n✗ Rule not found or error occurred.");
+
+                            Console.Write("Press Enter to continue...");
+                            Console.ReadLine();
+                            break;
+
+                        case "4":
+                            Console.Clear();
+                            Console.WriteLine("╔════════════════════════════════════════════════════════╗");
+                            Console.WriteLine("║              Delete Translation Rule                  ║");
+                            Console.WriteLine("╚════════════════════════════════════════════════════════╝\n");
+
+                            Console.Write("Enter source text to delete: ");
+                            var sourceToDelete = Console.ReadLine();
+
+                            if (string.IsNullOrWhiteSpace(sourceToDelete))
+                            {
+                                Console.WriteLine("\nSource text cannot be empty. Press Enter...");
+                                Console.ReadLine();
+                                break;
+                            }
+
+                            Console.Write("Are you sure? (y/n): ");
+                            if (Console.ReadLine()?.ToLower() == "y")
+                            {
+                                if (manager.DeleteRule(sourceToDelete))
+                                    Console.WriteLine("\n✓ Rule deleted successfully!");
+                                else
+                                    Console.WriteLine("\n✗ Rule not found.");
+                            }
+
+                            Console.Write("Press Enter to continue...");
+                            Console.ReadLine();
+                            break;
+
+                        case "5":
+                            manager.DisplayAllTranslations();
+                            break;
+
+                        case "6":
+                            return;
+
+                        default:
+                            Console.WriteLine("\nInvalid choice. Press Enter to continue...");
+                            Console.ReadLine();
+                            break;
+                    }
                 }
             }
         }
