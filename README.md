@@ -5,7 +5,7 @@
 [![CI/CD Status](https://github.com/quickattach0-tech/DeepLearningProtocol/actions/workflows/dotnet.yml/badge.svg)](https://github.com/quickattach0-tech/DeepLearningProtocol/actions/workflows/dotnet.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![.NET](https://img.shields.io/badge/.NET-10.0-blue)](https://dotnet.microsoft.com/)
-[![Release](https://img.shields.io/badge/Release-v1.2.0-green)](https://github.com/quickattach0-tech/DeepLearningProtocol/releases/tag/v1.2.0)
+[![Release](https://img.shields.io/badge/Release-v3.0-green)](https://github.com/quickattach0-tech/DeepLearningProtocol/releases/tag/v3.0)
 
 ---
 
@@ -16,7 +16,7 @@ This application is an **AI-enhanced hierarchical reasoning system** that proces
 ### **Core Capabilities**
 - 📊 **Multi-layer Reasoning**: Process information through AbstractCore, State, Depth, and Aim interfaces
 - 🛡️ **Security-first Design**: Automatic detection and protection against meme/binary content injection
-- 💾 **Persistent Storage**: SQL Server integration for translations, code reviews, and command definitions
+- 💾 **Persistent Storage**: SQL Server integration with Entity Framework Core 9.0.0
 - 🌍 **Multilingual Support**: AI-powered translation to Spanish, Arabic, and French with quality scoring
 - 📝 **Code Intelligence**: Store, review, and manage entire codebase with quality metrics
 - ⚙️ **Custom Commands**: Define and execute protocol-based string commands from database
@@ -24,6 +24,8 @@ This application is an **AI-enhanced hierarchical reasoning system** that proces
 - 🧠 **Adaptive Processing**: Configurable depth levels (1-10) for reasoning complexity
 - 🔐 **State Backup**: Automatic backup of all operations to prevent data loss
 - 📚 **Interactive Learning**: FAQ system, translator, and protocol documentation built-in
+- ✨ **New v3.0**: Protocol-aligned instruction translation with hierarchical processing
+- 🚀 **Latest Packages**: EF Core 9.0.0, .NET Test SDK 17.13.0 for enhanced stability
 
 ---
 
@@ -40,8 +42,11 @@ This application is an **AI-enhanced hierarchical reasoning system** that proces
 - **Command System** — Extensible command framework with protocol execution
 - **Comprehensive Testing** — 8 XUnit tests covering all core functionality
 - **Full Documentation** — Multiple guides for different user roles
-- **SQL Integration** — Entity Framework with SQL Server for persistent storage
+- **SQL Integration** — Entity Framework Core 9.0.0 with SQL Server
 - **CI/CD Automation** — Multi-platform releases via GitHub Actions
+- **Protocol Translation** — v3.0: Instruction translation following hierarchical protocol
+- **Advanced Type Safety** — Enhanced nullable reference handling and null safety
+- **Latest Dependencies** — Entity Framework Core 9.0.0, Test SDK 17.13.0
 
 ---
 
