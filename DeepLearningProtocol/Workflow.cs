@@ -4,6 +4,57 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 
+    /// <summary>
+    /// Workflow metrics for performance tracking and analytics
+    /// </summary>
+    public class WorkflowMetrics
+    {
+        public string? WorkflowName { get; set; }
+        public DateTime Timestamp { get; set; }
+        public Dictionary<string, StageMetrics> StageMetricsMap { get; set; } = new();
+        public double TotalDurationSeconds { get; set; }
+        public double AverageStageDurationSeconds { get; set; }
+        public string? SlowestStage { get; set; }
+        public double SlowestStageDurationSeconds { get; set; }
+
+        public override string ToString()
+        {
+            var sb = new System.Text.StringBuilder();
+            sb.AppendLine("═══════════════════════════════════════════════════════");
+            sb.AppendLine($"WORKFLOW METRICS: {WorkflowName}");
+            sb.AppendLine("═══════════════════════════════════════════════════════");
+            sb.AppendLine($"Total Duration: {TotalDurationSeconds:F2}s");
+            sb.AppendLine($"Average Stage Duration: {AverageStageDurationSeconds:F2}s");
+            sb.AppendLine($"Slowest Stage: {SlowestStage} ({SlowestStageDurationSeconds:F2}s)");
+            sb.AppendLine();
+            sb.AppendLine("STAGE BREAKDOWN:");
+            
+            foreach (var kvp in StageMetricsMap.OrderBy(x => x.Value.ExecutionOrder))
+            {
+                var metrics = kvp.Value;
+                sb.AppendLine($"  {metrics.StageName}:");
+                sb.AppendLine($"    Duration: {metrics.DurationSeconds:F2}s");
+                sb.AppendLine($"    Success: {(metrics.Success ? "✓" : "✗")}");
+                sb.AppendLine($"    Percentage: {metrics.PercentageOfTotal:F1}%");
+            }
+            
+            sb.AppendLine("═══════════════════════════════════════════════════════");
+            return sb.ToString();
+        }
+    }
+
+    /// <summary>
+    /// Metrics for individual workflow stage
+    /// </summary>
+    public class StageMetrics
+    {
+        public int ExecutionOrder { get; set; }
+        public string? StageName { get; set; }
+        public double DurationSeconds { get; set; }
+        public bool Success { get; set; }
+        public double PercentageOfTotal { get; set; }
+    }
+
 namespace DeepLearningProtocol
 {
     /// <summary>
@@ -217,6 +268,65 @@ namespace DeepLearningProtocol
         }
 
         /// <summary>
+        /// Get workflow metrics for performance analysis
+        /// </summary>
+        public WorkflowMetrics GetWorkflowMetrics(string workflowName)
+        {
+            var metrics = new WorkflowMetrics
+            {
+                WorkflowName = workflowName,
+                Timestamp = DateTime.UtcNow
+            };
+
+            if (_stages.Count == 0)
+            {
+                return metrics;
+            }
+
+            double totalDuration = 0;
+            StageMetrics slowestStageMetrics = null;
+            double maxDuration = 0;
+
+            foreach (var stage in _stages.Where(s => s.EndTime != null))
+            {
+                var duration = stage.GetDuration().TotalSeconds;
+                totalDuration += duration;
+
+                var stageMetric = new StageMetrics
+                {
+                    ExecutionOrder = stage.StageNumber,
+                    StageName = stage.Name,
+                    DurationSeconds = duration,
+                    Success = stage.Success
+                };
+
+                metrics.StageMetricsMap[stage.Name ?? $"Stage{stage.StageNumber}"] = stageMetric;
+
+                if (duration > maxDuration)
+                {
+                    maxDuration = duration;
+                    slowestStageMetrics = stageMetric;
+                }
+            }
+
+            metrics.TotalDurationSeconds = totalDuration;
+            metrics.AverageStageDurationSeconds = _stages.Count > 0 ? totalDuration / _stages.Count : 0;
+            metrics.SlowestStage = slowestStageMetrics?.StageName ?? "N/A";
+            metrics.SlowestStageDurationSeconds = maxDuration;
+
+            // Calculate percentage of total for each stage
+            if (totalDuration > 0)
+            {
+                foreach (var stage in metrics.StageMetricsMap.Values)
+                {
+                    stage.PercentageOfTotal = (stage.DurationSeconds / totalDuration) * 100;
+                }
+            }
+
+            return metrics;
+        }
+
+        /// <summary>
         /// Get workflow summary
         /// </summary>
         public string GetWorkflowSummary()
@@ -310,6 +420,37 @@ namespace DeepLearningProtocol
                 Console.WriteLine($"   Message: {ex.Message}");
                 Console.WriteLine($"   Fallback: Workflow data logged to console above.");
             }
+        }
+
+        /// <summary>
+        /// Save workflow metrics to JSON file
+        /// </summary>
+        public void SaveMetricsToFile(WorkflowMetrics metrics)
+        {
+            try
+            {
+                if (!Directory.Exists(_workflowLogPath))
+                {
+                    Directory.CreateDirectory(_workflowLogPath);
+                }
+
+                var fileName = Path.Combine(_workflowLogPath, $"metrics_{metrics.WorkflowName}_{DateTime.UtcNow:yyyyMMdd_HHmmss}.json");
+                var json = JsonSerializer.Serialize(metrics, new JsonSerializerOptions { WriteIndented = true });
+                File.WriteAllText(fileName, json);
+                Console.WriteLine($"✓ Metrics saved: {fileName}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"⚠️ WARNING: Could not save metrics file. Error: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Display workflow metrics to console
+        /// </summary>
+        public void DisplayMetrics(WorkflowMetrics metrics)
+        {
+            Console.WriteLine(metrics.ToString());
         }
 
         /// <summary>
