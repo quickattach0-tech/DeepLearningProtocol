@@ -18,6 +18,7 @@
 | [Architecture.md](docs/Architecture.md) | 9.2KB | Developers | System design, components, data flow |
 | [Testing.md](docs/Testing.md) | 7.5KB | Test Writers | Test suite, writing tests, best practices |
 | [DLP-Guide.md](docs/DLP-Guide.md) | 10.1KB | Security-focused | Data protection, detection rules, backups |
+| [WORKFLOW_PROTOCOL.md](docs/WORKFLOW_PROTOCOL.md) | 12.5KB | All Developers | Development workflow, CI/CD, deployment, Docker |
 | [Instruction-Wiki.md](docs/Instruction-Wiki.md) | 8.5KB | All Users | Core architecture, interfaces, implementation |
 | [Wiki-Home.md](docs/Wiki-Home.md) | 4.2KB | Wiki Visitors | Navigation, overview, quick links |
 | [Wiki-Setup.md](docs/Wiki-Setup.md) | 5.8KB | Wiki Admins | Wiki setup, synchronization, management |
@@ -42,8 +43,14 @@
 ### 👨‍💻 I'm a Developer
 1. Read: [Architecture.md](docs/Architecture.md) — System design
 2. Study: [Program.cs](DeepLearningProtocol/Program.cs) — Implementation
-3. Learn: [DLP-Guide.md](docs/DLP-Guide.md) — Protection layer
-4. Test: [Testing.md](docs/Testing.md) — Test suite
+3. Learn: [WORKFLOW_PROTOCOL.md](docs/WORKFLOW_PROTOCOL.md) — Development & deployment workflow
+4. Learn: [DLP-Guide.md](docs/DLP-Guide.md) — Protection layer
+5. Test: [Testing.md](docs/Testing.md) — Test suite
+
+### 🐳 I Want to Deploy with Docker
+1. Read: [WORKFLOW_PROTOCOL.md](docs/WORKFLOW_PROTOCOL.md#-docker-workflow) — Docker setup
+2. Build: `docker build -t deeplearningprotocol:latest .`
+3. Run: `docker run -it deeplearningprotocol:latest`
 
 ### 🧪 I Want to Write Tests
 1. Read: [Testing.md](docs/Testing.md) — Test guide

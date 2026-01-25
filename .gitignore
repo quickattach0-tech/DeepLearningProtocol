@@ -1,5 +1,4 @@
 # Build results
-[Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
@@ -9,10 +8,12 @@ x86/
 [Aa][Rr][Mm]/
 [Aa][Rr][Mm]64/
 bld/
-[Bb]in/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
+
+# Allow bin/ folder for including binaries in repository
+# [Bb]in/ is intentionally not ignored
 
 # Visual Studio cache/options
 .vs/

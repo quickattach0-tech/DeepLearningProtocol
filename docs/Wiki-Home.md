@@ -21,7 +21,9 @@ Welcome to the Deep Learning Protocol Wiki! This is your comprehensive guide to 
 - **[Backup Mechanism](DLP-Guide#backup-mechanism)** — State recovery
 - **[DLP Scenarios](DLP-Guide#scenarios)** — Real-world examples
 
-### Development
+### Development & Deployment
+- **[Workflow Protocol](WORKFLOW_PROTOCOL)** — Development workflow, CI/CD, and deployment
+- **[Docker Deployment](WORKFLOW_PROTOCOL#-docker-workflow)** — Containerization guide
 - **[Testing Guide](Testing)** — Test suite and writing tests
 - **[Test Categories](Testing#test-categories)** — Different test types
 - **[Running Tests](Testing#running-tests)** — Commands and options
