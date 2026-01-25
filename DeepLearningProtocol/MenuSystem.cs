@@ -98,8 +98,9 @@ namespace DeepLearningProtocol
                 Console.WriteLine("╚════════════════════════════════════════════════════════╝\n");
                 Console.WriteLine("1. Run Interactive Protocol");
                 Console.WriteLine("2. View FAQ");
-                Console.WriteLine("3. Exit\n");
-                Console.Write("Choose an option (1-3): ");
+                Console.WriteLine("3. Translate Text");
+                Console.WriteLine("4. Exit\n");
+                Console.Write("Choose an option (1-4): ");
 
                 var choice = Console.ReadLine();
                 switch (choice)
@@ -111,6 +112,9 @@ namespace DeepLearningProtocol
                         DisplayFAQ();
                         break;
                     case "3":
+                        RunTranslator();
+                        break;
+                    case "4":
                         Console.WriteLine("\nThank you for using Deep Learning Protocol!");
                         return;
                     default:
@@ -171,6 +175,146 @@ namespace DeepLearningProtocol
                     Console.ReadLine();
                 }
             }
+        }
+
+        /// <summary>
+        /// Runs the interactive protocol workflow.
+        /// Prompts user for input, goal, and depth level, then executes the protocol.
+        /// Includes DLP protection for suspicious content.
+        /// </summary>
+        private static void RunTranslator()
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine("╔════════════════════════════════════════════════════════╗");
+                Console.WriteLine("║          Multi-Language Translator (4 Languages)      ║");
+                Console.WriteLine("╚════════════════════════════════════════════════════════╝\n");
+
+                Console.WriteLine($"Dictionary size: {Translator.GetDictionarySize()} phrases\n");
+
+                Console.WriteLine("Available Languages:");
+                Console.WriteLine("1. Spanish");
+                Console.WriteLine("2. Arabic");
+                Console.WriteLine("3. French");
+                Console.WriteLine("4. View Available Phrases");
+                Console.WriteLine("5. Back to Main Menu\n");
+
+                Console.Write("Choose a language or option (1-5): ");
+                var choice = Console.ReadLine();
+
+                switch (choice)
+                {
+                    case "1":
+                    case "2":
+                    case "3":
+                        TranslateText(choice);
+                        break;
+                    case "4":
+                        DisplayAvailablePhrases();
+                        break;
+                    case "5":
+                        return;
+                    default:
+                        Console.WriteLine("\nInvalid choice. Press Enter to continue...");
+                        Console.ReadLine();
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Translates user input text to the selected language.
+        /// </summary>
+        private static void TranslateText(string languageChoice)
+        {
+            var targetLanguage = languageChoice switch
+            {
+                "1" => Translator.Language.Spanish,
+                "2" => Translator.Language.Arabic,
+                "3" => Translator.Language.French,
+                _ => Translator.Language.English
+            };
+
+            Console.Clear();
+            Console.WriteLine("╔════════════════════════════════════════════════════════╗");
+            Console.WriteLine($"║           Translator to {Translator.GetLanguageName(targetLanguage),10}");
+            Console.WriteLine("╚════════════════════════════════════════════════════════╝\n");
+
+            Console.WriteLine($"Translating to: {Translator.GetLanguageName(targetLanguage)} (Code: {Translator.GetLanguageCode(targetLanguage)})\n");
+
+            Console.Write("Enter text in English to translate: ");
+            var englishText = Console.ReadLine();
+
+            if (string.IsNullOrWhiteSpace(englishText))
+            {
+                Console.WriteLine("\nNo text entered. Press Enter to continue...");
+                Console.ReadLine();
+                return;
+            }
+
+            var translation = Translator.Translate(englishText, targetLanguage);
+
+            Console.WriteLine("\n--- Translation Result ---");
+            Console.WriteLine($"Original (English): {englishText}");
+            Console.WriteLine($"Translated ({Translator.GetLanguageName(targetLanguage)}): {translation}\n");
+
+            if (Translator.IsPhraseAvailable(englishText.ToLower()))
+            {
+                Console.WriteLine("✓ This phrase is in the translation dictionary!");
+            }
+            else
+            {
+                Console.WriteLine("ℹ This phrase was translated using available vocabulary.");
+            }
+
+            Console.Write("\nPress Enter to continue...");
+            Console.ReadLine();
+        }
+
+        /// <summary>
+        /// Displays all available phrases in the translation dictionary.
+        /// </summary>
+        private static void DisplayAvailablePhrases()
+        {
+            Console.Clear();
+            Console.WriteLine("╔════════════════════════════════════════════════════════╗");
+            Console.WriteLine("║          Available Phrases for Translation             ║");
+            Console.WriteLine("╚════════════════════════════════════════════════════════╝\n");
+
+            var phrases = Translator.GetAvailablePhrases().ToList();
+            Console.WriteLine($"Total phrases available: {phrases.Count}\n");
+
+            // Display phrases in columns
+            var columnsPerPage = 2;
+            var rowsPerPage = 15;
+            var pageCount = (int)Math.Ceiling((double)phrases.Count / (columnsPerPage * rowsPerPage));
+
+            for (int page = 0; page < pageCount; page++)
+            {
+                if (page > 0)
+                {
+                    Console.Write("\nPress Enter to see more phrases...");
+                    Console.ReadLine();
+                    Console.Clear();
+                    Console.WriteLine("╔════════════════════════════════════════════════════════╗");
+                    Console.WriteLine("║          Available Phrases for Translation             ║");
+                    Console.WriteLine("╚════════════════════════════════════════════════════════╝\n");
+                }
+
+                var startIdx = page * columnsPerPage * rowsPerPage;
+                var endIdx = Math.Min(startIdx + columnsPerPage * rowsPerPage, phrases.Count);
+
+                for (int i = startIdx; i < endIdx; i += columnsPerPage)
+                {
+                    var phrase1 = i < phrases.Count ? phrases[i] : "";
+                    var phrase2 = i + 1 < phrases.Count ? phrases[i + 1] : "";
+                    Console.WriteLine($"  • {phrase1,-30} • {phrase2,-30}");
+                }
+            }
+
+            Console.Write("\nPress Enter to return to translator menu...");
+            Console.ReadLine();
         }
 
         /// <summary>
