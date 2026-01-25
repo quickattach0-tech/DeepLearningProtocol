@@ -3,6 +3,7 @@ name: CI/CD for Deep Learning Protocol
 on:
   push:
     branches: [ main, master, develop ]
+    tags: ['v*']
   pull_request:
     branches: [ main, master, develop ]
 
@@ -239,6 +240,15 @@ jobs:
           1. Extract `deeplearning-protocol-installers.tar.gz`
           2. Run: `sudo bash install-macos.sh`
           3. Load the launch agent: `launchctl load /Library/LaunchAgents/com.quickattach0tech.deeplearningprotocol.plist`
+
+    - name: Publish NuGet package
+      if: ${{ startsWith(github.ref, 'refs/tags/') && secrets.NUGET_API_KEY != '' }}
+      run: |
+        echo "Packing NuGet package for DeepLearningProtocol v${{ env.VERSION }}"
+        dotnet pack DeepLearningProtocol/DeepLearningProtocol.csproj -c Release -o ./nupkgs /p:PackageVersion=${{ env.VERSION }}
+        ls -l ./nupkgs || true
+        echo "Publishing package to nuget.org (skip if already exists)"
+        dotnet nuget push ./nupkgs/*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate || true
 
     - name: Upload multi-platform release artifacts
       uses: actions/upload-artifact@v4
