@@ -5,24 +5,17 @@
 [![CI/CD Status](https://github.com/quickattach0-tech/DeepLearningProtocol/actions/workflows/dotnet.yml/badge.svg)](https://github.com/quickattach0-tech/DeepLearningProtocol/actions/workflows/dotnet.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![.NET](https://img.shields.io/badge/.NET-10.0-blue)](https://dotnet.microsoft.com/)
-[![Release](https://img.shields.io/badge/Release-v3.1-green)](https://github.com/quickattach0-tech/DeepLearningProtocol/releases/tag/v3.1)
+[![Release](https://img.shields.io/badge/Release-v3.2-green)](https://github.com/quickattach0-tech/DeepLearningProtocol/releases/tag/v3.2)
 
 ---
 
-## 🎉 v3.1 Release: Quality Translation & 24-Hour Uptime!
+## 🎉 v3.2 Release: SignalR & Docker Improvements
 
-> **What's New in v3.1?**
+> **What's New in v3.2?**
 >
-> Major feature release introducing **Quality Translation (QT)** system:
+> This release adds a built-in SignalR server endpoint for real-time notifications and improves Docker container runtime support by switching to the ASP.NET image and exposing port 80.
 >
-> - 🌍 **Quality Translation (QT)** — Replaces DLP with multi-language support (English, Spanish, Arabic, French)
-> - ⏰ **24-Hour Uptime Calendar** — Real-time hourly availability tracking with metrics
-> - 🎯 **Quality Scoring** — Content assessment system (0-100 scale) for data integrity
-> - 📊 **Translation Metrics** — Store and analyze translation quality across all languages
-> - 🔄 **Enhanced Protection** — Language-aware content validation with quality thresholds
-> - 🚀 **Production Ready** — 0 errors, 8/8 tests passing
->
-> **[Download v3.1 Now](https://github.com/quickattach0-tech/DeepLearningProtocol/releases/tag/v3.1)** | **[View Release Notes](https://github.com/quickattach0-tech/DeepLearningProtocol/releases/tag/v3.1)**
+> **[Download v3.2 Now](https://github.com/quickattach0-tech/DeepLearningProtocol/releases/tag/v3.2)** | **[View Release Notes](https://github.com/quickattach0-tech/DeepLearningProtocol/releases/tag/v3.2)**
 
 ---
 
@@ -72,13 +65,13 @@ This application is an **AI-enhanced hierarchical reasoning system** that proces
 
 | Audience | Resource | Purpose |
 |----------|----------|---------|
-| **First-timers** | [Getting Started](docs/Getting-Started.md) | Build, run, and understand the basics |
-| **Developers** | [Architecture Guide](docs/Architecture.md) | System design and components |
-| **Language Learners** | [Translator Feature](docs/TRANSLATOR_FEATURE.md) | Multi-language translation guide |
-| **Database Users** | [Translation Management](docs/TRANSLATION_DATABASE.md) | Store and manage translations |
-| **Code Reviewers** | [Code Repository](docs/CODE_REPOSITORY.md) | Review workflows and quality tracking |
-| **Security-minded** | [Quality Translation Guide](docs/QUALITY_TRANSLATION_GUIDE.md) | QT system deep dive |
-| **Testers** | [Testing Guide](docs/Testing.md) | Writing and running tests |
+| **First-timers** | [Getting Started](wiki/docs/Getting-Started.md) | Build, run, and understand the basics |
+| **Developers** | [Architecture Guide](wiki/docs/Architecture.md) | System design and components |
+| **Language Learners** | [Translator Feature](wiki/docs/TRANSLATOR_FEATURE.md) | Multi-language translation guide |
+| **Database Users** | [Translation Management](wiki/docs/TRANSLATION_DATABASE.md) | Store and manage translations |
+| **Code Reviewers** | [Code Repository](wiki/docs/CODE_REPOSITORY.md) | Review workflows and quality tracking |
+| **Security-minded** | [Quality Translation Guide](wiki/docs/QUALITY_TRANSLATION_GUIDE.md) | QT system deep dive |
+| **Testers** | [Testing Guide](wiki/docs/Testing.md) | Writing and running tests |
 | **Contributors** | [Contributing](CONTRIBUTING.md) | Development workflow & standards |
 | **All** | [Full Wiki](https://github.com/quickattach0-tech/DeepLearningProtocol/wiki) | Complete reference |
 
@@ -417,7 +410,7 @@ Feature Development (Local)
 2. **Implement changes**
    - Update `/DeepLearningProtocol/Program.cs` for core logic
    - Add tests to `/DeepLearningProtocol.Tests/DeepLearningProtocolTests.cs`
-   - Update docs in `/docs/`
+   - Update docs in `/wiki/docs/`
 
 3. **Test locally**
    ```bash

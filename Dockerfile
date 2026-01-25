@@ -18,6 +18,9 @@ RUN dotnet restore DeepLearningProtocol.sln
 # Copy source code
 COPY . .
 
+# Ensure packages (including analyzers) are restored after copying source
+RUN dotnet restore
+
 # Build the application
 RUN dotnet build DeepLearningProtocol.sln --configuration Release --no-restore
 
@@ -32,7 +35,7 @@ RUN dotnet publish DeepLearningProtocol/DeepLearningProtocol.csproj \
 
 
 # Stage 2: Runtime stage
-FROM mcr.microsoft.com/dotnet/runtime:10.0-alpine
+FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine
 
 WORKDIR /app
 
@@ -42,14 +45,17 @@ RUN mkdir -p .dlp_backups
 # Copy published application from builder stage
 COPY --from=builder /app/publish .
 
+# Expose HTTP port
+EXPOSE 80
+
 # Add labels for metadata
 LABEL maintainer="Deep Learning Protocol Contributors"
-LABEL description="Deep Learning Protocol - A hierarchical multi-interface reasoning system with Data Loss Prevention"
-LABEL version="1.0.0"
+LABEL description="Deep Learning Protocol - A hierarchical multi-interface reasoning system with SignalR support"
+LABEL version="3.2"
 
 # Set entry point
 ENTRYPOINT ["dotnet", "DeepLearningProtocol.dll"]
 
-# Health check
+# Health check (checks /health endpoint)
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD dotnet DeepLearningProtocol.dll --version || exit 1
+    CMD wget -qO- http://localhost/health || exit 1
