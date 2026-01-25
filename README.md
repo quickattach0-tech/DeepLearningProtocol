@@ -5,7 +5,7 @@
 [![CI/CD Status](https://github.com/quickattach0-tech/DeepLearningProtocol/actions/workflows/dotnet.yml/badge.svg)](https://github.com/quickattach0-tech/DeepLearningProtocol/actions/workflows/dotnet.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![.NET](https://img.shields.io/badge/.NET-10.0-blue)](https://dotnet.microsoft.com/)
-[![Release](https://img.shields.io/badge/Release-v1.1.0-green)](https://github.com/quickattach0-tech/DeepLearningProtocol/releases/tag/v1.1.0)
+[![Release](https://img.shields.io/badge/Release-v1.2.0-green)](https://github.com/quickattach0-tech/DeepLearningProtocol/releases/tag/v1.2.0)
 
 ---
 
@@ -13,9 +13,11 @@
 
 - **Hierarchical Architecture** — Multi-interface design with AbstractCore, State, Depth, and Aim layers
 - **Data Loss Prevention** — Detects meme/binary content and backs up states automatically
-- **Interactive Menu** — User-friendly CLI with 7 menu options for full functionality
+- **Interactive Menu** — User-friendly CLI with 8 menu options for full functionality
 - **Multilingual Translator** — Translate 60+ phrases into Spanish, Arabic, or French
 - **Translation Database** — Store and manage custom translation rules with priority matching
+- **Code Repository System** — Store, review, and manage source code with quality scoring
+- **Review Workflows** — Complete code review lifecycle with status tracking
 - **String Commands** — Define and execute custom commands from database
 - **Command System** — Extensible command framework with protocol execution
 - **Comprehensive Testing** — 8 XUnit tests covering all core functionality
@@ -33,6 +35,7 @@
 | **Developers** | [Architecture Guide](docs/Architecture.md) | System design and components |
 | **Language Learners** | [Translator Feature](docs/TRANSLATOR_FEATURE.md) | Multi-language translation guide |
 | **Database Users** | [Translation Management](docs/TRANSLATION_DATABASE.md) | Store and manage translations |
+| **Code Reviewers** | [Code Repository](docs/CODE_REPOSITORY.md) | Review workflows and quality tracking |
 | **Security-minded** | [DLP Guide](docs/DLP-Guide.md) | Data protection deep dive |
 | **Testers** | [Testing Guide](docs/Testing.md) | Writing and running tests |
 | **Contributors** | [Contributing](CONTRIBUTING.md) | Development workflow & standards |
