@@ -21,8 +21,6 @@
 | [TRANSLATOR_FEATURE.md](TRANSLATOR_FEATURE.md) | All Users | Translator module, language support, usage |
 | [TRANSLATION_DATABASE.md](TRANSLATION_DATABASE.md) | Database Users | Translation storage, rule management, quality tracking |
 | [CODE_REPOSITORY.md](CODE_REPOSITORY.md) | Code Reviewers | Code storage, review workflows, quality scoring |
-| [TRANSLATOR_FEATURE.md](TRANSLATOR_FEATURE.md) | All Users | Translator module, language support, usage |
-| [TRANSLATION_DATABASE.md](TRANSLATION_DATABASE.md) | Database Users | Translation storage, rule management, quality tracking |
 | [Instruction-Wiki.md](Instruction-Wiki.md) | All Users | Core architecture, interfaces, implementation |
 | [../INSTRUCTION_TRANSLATION_GUIDE.md](../INSTRUCTION_TRANSLATION_GUIDE.md) | All Users | Protocol-aligned instruction translation, hierarchical processing |
 | [Wiki-Home.md](Wiki-Home.md) | Wiki Visitors | Navigation, overview, quick links |
