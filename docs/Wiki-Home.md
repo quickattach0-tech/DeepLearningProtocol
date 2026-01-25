@@ -20,6 +20,7 @@ Welcome to the Deep Learning Protocol Wiki! This is your comprehensive guide to 
 - **[DLP Detection Rules](DLP-Guide#detection-rules)** — What gets blocked
 - **[Backup Mechanism](DLP-Guide#backup-mechanism)** — State recovery
 - **[DLP Scenarios](DLP-Guide#scenarios)** — Real-world examples
+- **[Multilingual Translator](TRANSLATOR_FEATURE)** — 60+ phrase translation feature
 
 ### Development & Deployment
 - **[Workflow Protocol](WORKFLOW_PROTOCOL)** — Development workflow, CI/CD, and deployment

@@ -18,6 +18,7 @@
 | [Testing.md](Testing.md) | Test Writers | Test suite, writing tests, best practices |
 | [DLP-Guide.md](DLP-Guide.md) | Security-focused | Data protection, detection rules, backups |
 | [WORKFLOW_PROTOCOL.md](WORKFLOW_PROTOCOL.md) | All Developers | Development workflow, CI/CD, deployment, Docker |
+| [TRANSLATOR_FEATURE.md](TRANSLATOR_FEATURE.md) | All Users | Translator module, language support, usage |
 | [Instruction-Wiki.md](Instruction-Wiki.md) | All Users | Core architecture, interfaces, implementation |
 | [Wiki-Home.md](Wiki-Home.md) | Wiki Visitors | Navigation, overview, quick links |
 | [Wiki-Setup.md](Wiki-Setup.md) | Wiki Admins | Wiki setup, synchronization, management |

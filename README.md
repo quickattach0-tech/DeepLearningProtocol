@@ -12,7 +12,8 @@
 
 - **Hierarchical Architecture** — Multi-interface design with AbstractCore, State, Depth, and Aim layers
 - **Data Loss Prevention** — Detects meme/binary content and backs up states automatically
-- **Interactive Menu** — User-friendly CLI with 10-question FAQ system
+- **Interactive Menu** — User-friendly CLI with 10-question FAQ system and translator
+- **Multilingual Translator** — Translate 60+ phrases into Spanish, Arabic, or French
 - **Comprehensive Testing** — 8 XUnit tests covering all core functionality
 - **Full Documentation** — Multiple guides for different user roles
 - **CI/CD Automation** — Multi-platform releases via GitHub Actions
@@ -25,6 +26,7 @@
 |----------|----------|---------|
 | **First-timers** | [Getting Started](docs/Getting-Started.md) | Build, run, and understand the basics |
 | **Developers** | [Architecture Guide](docs/Architecture.md) | System design and components |
+| **Language Learners** | [Translator Feature](docs/TRANSLATOR_FEATURE.md) | Multi-language translation guide |
 | **Security-minded** | [DLP Guide](docs/DLP-Guide.md) | Data protection deep dive |
 | **Testers** | [Testing Guide](docs/Testing.md) | Writing and running tests |
 | **Contributors** | [Contributing](CONTRIBUTING.md) | Development workflow & standards |
