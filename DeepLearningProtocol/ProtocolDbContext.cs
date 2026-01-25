@@ -12,11 +12,18 @@ namespace DeepLearningProtocol
         /// <summary>DbSet for CommandDefinitions table</summary>
         public DbSet<CommandDefinition> CommandDefinitions { get; set; }
 
-    /// <summary>DbSet for TranslationRules table</summary>
-    public DbSet<TranslationRule> TranslationRules { get; set; }
+        /// <summary>DbSet for TranslationRules table</summary>
+        public DbSet<TranslationRule> TranslationRules { get; set; }
 
-    /// <summary>DbSet for TranslatedTexts table</summary>
-    public DbSet<TranslatedText> TranslatedTexts { get; set; }
+        /// <summary>DbSet for TranslatedTexts table</summary>
+        public DbSet<TranslatedText> TranslatedTexts { get; set; }
+
+        /// <summary>DbSet for CodeFiles table</summary>
+        public DbSet<CodeFile> CodeFiles { get; set; }
+
+        /// <summary>DbSet for CodeReviews table</summary>
+        public DbSet<CodeReview> CodeReviews { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             // Use LocalDB for local development, configurable for production
@@ -148,6 +155,75 @@ namespace DeepLearningProtocol
 
                 // Index for quality score
                 entity.HasIndex(e => e.QualityScore);
+            });
+
+            // Configure CodeFile entity
+            modelBuilder.Entity<CodeFile>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.FileName)
+                    .IsRequired()
+                    .HasMaxLength(256);
+
+                entity.Property(e => e.FilePath)
+                    .IsRequired()
+                    .HasMaxLength(512);
+
+                entity.Property(e => e.CodeContent)
+                    .IsRequired();
+
+                entity.Property(e => e.Language)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.Purpose)
+                    .HasMaxLength(500);
+
+                entity.Property(e => e.ReviewStatus)
+                    .HasMaxLength(50)
+                    .HasDefaultValue("New");
+
+                entity.Property(e => e.ReviewNotes)
+                    .HasMaxLength(1000);
+
+                entity.Property(e => e.SuggestedUpdates)
+                    .HasMaxLength(1000);
+
+                entity.Property(e => e.StoredAt)
+                    .HasDefaultValueSql("GETUTCDATE()");
+
+                entity.HasIndex(e => e.FileName);
+                entity.HasIndex(e => e.ReviewStatus);
+                entity.HasIndex(e => e.IsActive);
+            });
+
+            // Configure CodeReview entity
+            modelBuilder.Entity<CodeReview>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.ReviewType)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.Feedback)
+                    .HasMaxLength(1000);
+
+                entity.Property(e => e.IssuesFound)
+                    .HasMaxLength(1000);
+
+                entity.Property(e => e.RecommendedChanges)
+                    .HasMaxLength(1000);
+
+                entity.Property(e => e.Priority)
+                    .HasDefaultValue(5);
+
+                entity.Property(e => e.ReviewedAt)
+                    .HasDefaultValueSql("GETUTCDATE()");
+
+                entity.HasIndex(e => e.CodeFileId);
+                entity.HasIndex(e => e.Priority);
             });
         }
     }

@@ -52,4 +52,129 @@ PublishProfiles/
 Thumbs.db
 
 # IDE
-.editorconfig
+.editorconfig.project
+.classpath
+.c9/
+.settings/
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.~*
+
+# Environment files
+.env
+.env.local
+.env.*.local
+*.env
+
+# Database files
+*.mdf
+*.ldf
+*.db
+*.sqlite
+*.sqlite3
+
+# Visual Studio debugger
+.vscode/launch.json
+.vscode/tasks.json
+
+# Package lock files (optional - uncomment if desired)
+# package-lock.json
+# yarn.lock
+
+# Generated files
+*.generated.cs
+
+# Backup files
+*.backup
+*.bak
+
+# Local backup directory
+.dlp_backups/
+
+# Code analysis
+.fxcop*
+.fxcopReport
+
+# OpenCover
+OpenCover/
+
+# Coverage Reports
+coverage/
+coveragereport/
+
+# Resharper
+*.DotSettings.user
+
+# NCrunch
+.ncrunchsolution.user
+
+# BizTalk
+*.btp.cs
+*.btm.cs
+*.odx.cs
+*.xsd.cs
+
+# MyGet build specific
+.myget/
+
+# Cake
+tools/
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# npm
+node_modules/
+package-lock.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+*.egg-info/
+
+# Compiled files
+*.o
+*.a
+*.lib
+*.so
+*.dylib
+*.dll
+*.exe
+*.out
+*.app
+
+# System/OS specific
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Desktop.ini
+
+# IDE Project files to ignore but version control settings to keep
+.vscode/extensions.json
+!.vscode/
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# Local database instances
+*.mdf
+*.ldf
+LocalDB/
+
+# Runtime Configuration
+appsettings.Development.json
+appsettings.*.json
+!appsettings.json

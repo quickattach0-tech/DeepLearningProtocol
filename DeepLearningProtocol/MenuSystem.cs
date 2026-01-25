@@ -102,8 +102,9 @@ namespace DeepLearningProtocol
                 Console.WriteLine("4. View System Data Map");
                 Console.WriteLine("5. Translate & Store Text");
                 Console.WriteLine("6. Manage Translation Rules");
-                Console.WriteLine("7. Exit\n");
-                Console.Write("Choose an option (1-7): ");
+                Console.WriteLine("7. Code Repository & Review");
+                Console.WriteLine("8. Exit\n");
+                Console.Write("Choose an option (1-8): ");
 
                 var choice = Console.ReadLine();
                 switch (choice)
@@ -127,6 +128,9 @@ namespace DeepLearningProtocol
                         ManageTranslationRules();
                         break;
                     case "7":
+                        CodeRepositoryMenu();
+                        break;
+                    case "8":
                         Console.WriteLine("\nThank you for using Deep Learning Protocol!");
                         return;
                     default:
@@ -642,6 +646,150 @@ namespace DeepLearningProtocol
                             break;
 
                         case "6":
+                            return;
+
+                        default:
+                            Console.WriteLine("\nInvalid choice. Press Enter to continue...");
+                            Console.ReadLine();
+                            break;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Code Repository and Review Management Menu
+        /// </summary>
+        private static void CodeRepositoryMenu()
+        {
+            using (var context = new ProtocolDbContext())
+            {
+                var manager = new CodeManager(context);
+
+                while (true)
+                {
+                    Console.Clear();
+                    Console.WriteLine("╔════════════════════════════════════════════════════════╗");
+                    Console.WriteLine("║          Code Repository & Review System               ║");
+                    Console.WriteLine("╚════════════════════════════════════════════════════════╝\n");
+                    Console.WriteLine("1. Store Project Source Files");
+                    Console.WriteLine("2. View Code Files Index");
+                    Console.WriteLine("3. Review Code File");
+                    Console.WriteLine("4. Add Code Review Record");
+                    Console.WriteLine("5. View Review Workflow");
+                    Console.WriteLine("6. Update Review Status");
+                    Console.WriteLine("7. Get Files by Status");
+                    Console.WriteLine("8. Back to Main Menu\n");
+                    Console.Write("Choose an option (1-8): ");
+
+                    var choice = Console.ReadLine();
+                    switch (choice)
+                    {
+                        case "1":
+                            Console.WriteLine("\nEnter project path (e.g., /workspaces/DeepLearningProtocol/DeepLearningProtocol):");
+                            var projectPath = Console.ReadLine();
+                            if (string.IsNullOrWhiteSpace(projectPath))
+                                projectPath = "/workspaces/DeepLearningProtocol/DeepLearningProtocol";
+                            manager.StoreProjectSourceFiles(projectPath);
+                            Console.Write("Press Enter to continue...");
+                            Console.ReadLine();
+                            break;
+
+                        case "2":
+                            manager.DisplayCodeFilesIndex();
+                            Console.Write("Press Enter to continue...");
+                            Console.ReadLine();
+                            break;
+
+                        case "3":
+                            manager.DisplayCodeFilesIndex();
+                            Console.Write("Enter file ID to review: ");
+                            if (int.TryParse(Console.ReadLine(), out int fileId))
+                            {
+                                Console.Write("Show summary only? (y/n): ");
+                                bool summaryOnly = Console.ReadLine()?.ToLower() == "y";
+                                manager.DisplayCodeForReview(fileId, summaryOnly);
+                            }
+                            Console.Write("Press Enter to continue...");
+                            Console.ReadLine();
+                            break;
+
+                        case "4":
+                            manager.DisplayCodeFilesIndex();
+                            Console.Write("Enter file ID to review: ");
+                            if (int.TryParse(Console.ReadLine(), out int reviewFileId))
+                            {
+                                Console.Write("Review type (Code/Documentation/Quality/Security): ");
+                                var reviewType = Console.ReadLine() ?? "Code";
+                                
+                                Console.Write("Quality score (0-100): ");
+                                int.TryParse(Console.ReadLine(), out int score);
+                                score = Math.Max(0, Math.Min(100, score));
+
+                                Console.Write("Feedback (optional): ");
+                                var feedback = Console.ReadLine() ?? "";
+
+                                Console.Write("Issues found (optional): ");
+                                var issues = Console.ReadLine() ?? "";
+
+                                Console.Write("Recommended changes (optional): ");
+                                var changes = Console.ReadLine() ?? "";
+
+                                manager.AddCodeReview(reviewFileId, reviewType, feedback, issues, changes, score);
+                                Console.WriteLine($"✓ Code review added with quality score: {score}");
+                            }
+                            Console.Write("Press Enter to continue...");
+                            Console.ReadLine();
+                            break;
+
+                        case "5":
+                            manager.DisplayCodeReviewWorkflow();
+                            Console.Write("Press Enter to continue...");
+                            Console.ReadLine();
+                            break;
+
+                        case "6":
+                            manager.DisplayCodeFilesIndex();
+                            Console.Write("Enter file ID: ");
+                            if (int.TryParse(Console.ReadLine(), out int updateFileId))
+                            {
+                                Console.WriteLine("\nStatus options: New, In_Review, Needs_Updates, Approved, Deprecated");
+                                Console.Write("New status: ");
+                                var newStatus = Console.ReadLine() ?? "New";
+
+                                Console.Write("Review notes (optional): ");
+                                var notes = Console.ReadLine() ?? "";
+
+                                Console.Write("Suggested updates (optional): ");
+                                var suggestions = Console.ReadLine() ?? "";
+
+                                manager.UpdateReviewStatus(updateFileId, newStatus, notes, suggestions);
+                                Console.WriteLine($"✓ Status updated to: {newStatus}");
+                            }
+                            Console.Write("Press Enter to continue...");
+                            Console.ReadLine();
+                            break;
+
+                        case "7":
+                            Console.WriteLine("\nStatus options: New, In_Review, Needs_Updates, Approved, Deprecated");
+                            Console.Write("Enter status to filter: ");
+                            var filterStatus = Console.ReadLine() ?? "New";
+                            var files = manager.GetCodeFilesByReviewStatus(filterStatus);
+                            if (files.Any())
+                            {
+                                Console.WriteLine($"\nFiles with status '{filterStatus}':");
+                                foreach (var file in files)
+                                {
+                                    Console.WriteLine($"  [{file.Id}] {file.FileName} - {file.LineCount} lines");
+                                }
+                            }
+                            else
+                                Console.WriteLine($"No files found with status '{filterStatus}'");
+                            Console.Write("Press Enter to continue...");
+                            Console.ReadLine();
+                            break;
+
+                        case "8":
                             return;
 
                         default:

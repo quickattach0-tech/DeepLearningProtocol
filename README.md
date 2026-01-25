@@ -5,6 +5,7 @@
 [![CI/CD Status](https://github.com/quickattach0-tech/DeepLearningProtocol/actions/workflows/dotnet.yml/badge.svg)](https://github.com/quickattach0-tech/DeepLearningProtocol/actions/workflows/dotnet.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![.NET](https://img.shields.io/badge/.NET-10.0-blue)](https://dotnet.microsoft.com/)
+[![Release](https://img.shields.io/badge/Release-v1.1.0-green)](https://github.com/quickattach0-tech/DeepLearningProtocol/releases/tag/v1.1.0)
 
 ---
 
@@ -12,10 +13,14 @@
 
 - **Hierarchical Architecture** — Multi-interface design with AbstractCore, State, Depth, and Aim layers
 - **Data Loss Prevention** — Detects meme/binary content and backs up states automatically
-- **Interactive Menu** — User-friendly CLI with 10-question FAQ system and translator
+- **Interactive Menu** — User-friendly CLI with 7 menu options for full functionality
 - **Multilingual Translator** — Translate 60+ phrases into Spanish, Arabic, or French
+- **Translation Database** — Store and manage custom translation rules with priority matching
+- **String Commands** — Define and execute custom commands from database
+- **Command System** — Extensible command framework with protocol execution
 - **Comprehensive Testing** — 8 XUnit tests covering all core functionality
 - **Full Documentation** — Multiple guides for different user roles
+- **SQL Integration** — Entity Framework with SQL Server for persistent storage
 - **CI/CD Automation** — Multi-platform releases via GitHub Actions
 
 ---
@@ -27,6 +32,7 @@
 | **First-timers** | [Getting Started](docs/Getting-Started.md) | Build, run, and understand the basics |
 | **Developers** | [Architecture Guide](docs/Architecture.md) | System design and components |
 | **Language Learners** | [Translator Feature](docs/TRANSLATOR_FEATURE.md) | Multi-language translation guide |
+| **Database Users** | [Translation Management](docs/TRANSLATION_DATABASE.md) | Store and manage translations |
 | **Security-minded** | [DLP Guide](docs/DLP-Guide.md) | Data protection deep dive |
 | **Testers** | [Testing Guide](docs/Testing.md) | Writing and running tests |
 | **Contributors** | [Contributing](CONTRIBUTING.md) | Development workflow & standards |
