@@ -24,6 +24,7 @@
 | [TRANSLATOR_FEATURE.md](TRANSLATOR_FEATURE.md) | All Users | Translator module, language support, usage |
 | [TRANSLATION_DATABASE.md](TRANSLATION_DATABASE.md) | Database Users | Translation storage, rule management, quality tracking |
 | [Instruction-Wiki.md](Instruction-Wiki.md) | All Users | Core architecture, interfaces, implementation |
+| [../INSTRUCTION_TRANSLATION_GUIDE.md](../INSTRUCTION_TRANSLATION_GUIDE.md) | All Users | Protocol-aligned instruction translation, hierarchical processing |
 | [Wiki-Home.md](Wiki-Home.md) | Wiki Visitors | Navigation, overview, quick links |
 | [Wiki-Setup.md](Wiki-Setup.md) | Wiki Admins | Wiki setup, synchronization, management |
 | [Foreign-Education.md](Foreign-Education.md) | Int'l Educators | Adaptation for foreign education systems |
