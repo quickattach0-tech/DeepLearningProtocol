@@ -6,6 +6,74 @@ using System.Linq;
 namespace DeepLearningProtocol
 {
     /// <summary>
+    /// Encapsulates quality assessment heuristics and thresholds.
+    /// </summary>
+    public static class QualityHeuristics
+    {
+        public const int Baseline = 50;
+        public const int SuspiciousPenalty = 30;
+        public const int LargePayloadPenalty = 20;
+        public const int TooShortPenalty = 25;
+        public const int PunctuationBonus = 15;
+        public const int MultilineBonus = 20;
+        public const int MinLength = 10;
+        public const int MaxSingleLineLength = 200;
+        public const int MultilineMinLength = 50;
+
+        /// <summary>Patterns that indicate suspicious/binary content</summary>
+        public static readonly string[] SuspiciousPatterns = 
+        {
+            "meme", ".png", ".jpg", ".jpeg", "data:image", "base64,"
+        };
+
+        /// <summary>Punctuation marks that indicate quality content</summary>
+        public static readonly char[] PunctuationMarks = { '.', '!', '?' };
+    }
+
+    /// <summary>
+    /// Static cached dictionaries for translation efficiency.
+    /// Prevents repeated dictionary instantiation during translations.
+    /// </summary>
+    public static class TranslationDictionaries
+    {
+        /// <summary>Spanish translation dictionary (cached)</summary>
+        public static readonly Dictionary<string, string> Spanish = new(StringComparer.OrdinalIgnoreCase)
+        {
+            { "quality translation", "traducción de calidad" },
+            { "uptime calendar", "calendario de disponibilidad" },
+            { "24-hour availability", "disponibilidad de 24 horas" },
+            { "deep learning protocol", "protocolo de aprendizaje profundo" },
+            { "state interface", "interfaz de estado" },
+            { "aim interface", "interfaz de objetivo" },
+            { "depth interface", "interfaz de profundidad" }
+        };
+
+        /// <summary>Arabic translation dictionary (cached)</summary>
+        public static readonly Dictionary<string, string> Arabic = new(StringComparer.OrdinalIgnoreCase)
+        {
+            { "quality translation", "ترجمة الجودة" },
+            { "uptime calendar", "تقويم المدة الزمنية" },
+            { "24-hour availability", "توفر 24 ساعة" },
+            { "deep learning protocol", "بروتوكول التعلم العميق" },
+            { "state interface", "واجهة الحالة" },
+            { "aim interface", "واجهة الهدف" },
+            { "depth interface", "واجهة العمق" }
+        };
+
+        /// <summary>French translation dictionary (cached)</summary>
+        public static readonly Dictionary<string, string> French = new(StringComparer.OrdinalIgnoreCase)
+        {
+            { "quality translation", "traduction de qualité" },
+            { "uptime calendar", "calendrier de disponibilité" },
+            { "24-hour availability", "disponibilité 24 heures" },
+            { "deep learning protocol", "protocole d'apprentissage profond" },
+            { "state interface", "interface d'état" },
+            { "aim interface", "interface d'objectif" },
+            { "depth interface", "interface de profondeur" }
+        };
+    }
+
+    /// <summary>
     /// QualityTranslation (QT) is a multi-language, uptime-aware system that validates content quality
     /// and provides real-time translation across 4 supported languages with 24-hour uptime tracking.
     /// It replaces the previous DataLossPrevention layer with enhanced language support and availability monitoring.
@@ -93,17 +161,22 @@ namespace DeepLearningProtocol
                     _uptimeHours[currentHour] = 0;
                 
                 _uptimeHours[currentHour]++;
+                LogUptimeEvent(currentHour);
+            }
+        }
 
-                try
-                {
-                    var logFile = Path.Combine(_metricsDir, $"uptime_{DateTime.UtcNow:yyyyMMdd}.log");
-                    File.AppendAllText(logFile, 
-                        $"[{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss}] Hour {currentHour}: Event recorded\n");
-                }
-                catch
-                {
-                    // best-effort logging
-                }
+        /// <summary>Logs uptime event to file (best-effort)</summary>
+        private void LogUptimeEvent(int hour)
+        {
+            try
+            {
+                var logFile = Path.Combine(_metricsDir, $"uptime_{DateTime.UtcNow:yyyyMMdd}.log");
+                var logEntry = $"[{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss}] Hour {hour}: Event recorded\n";
+                File.AppendAllText(logFile, logEntry);
+            }
+            catch
+            {
+                // best-effort logging; swallow errors to prevent crashes
             }
         }
 
@@ -149,32 +222,55 @@ namespace DeepLearningProtocol
             if (string.IsNullOrEmpty(content)) return 0;
 
             RecordUptimeEvent();
-            
-            int score = 50; // baseline
+            return CalculateQualityScore(content);
+        }
+
+        /// <summary>Calculates quality score based on heuristics</summary>
+        private int CalculateQualityScore(string content)
+        {
+            int score = QualityHeuristics.Baseline;
             var lower = content.ToLowerInvariant();
 
-            // Penalize meme/binary content
-            if (lower.Contains("meme") || lower.Contains(".png") || lower.Contains(".jpg") || 
-                lower.Contains(".jpeg") || lower.Contains("data:image") || lower.Contains("base64,"))
-                score -= 30;
-
-            // Penalize large single-line payloads (likely binary)
-            if (content.Length > 200 && !content.Contains("\n"))
-                score -= 20;
-
-            // Reward proper punctuation and spacing
-            if (content.Contains(".") || content.Contains("!") || content.Contains("?"))
-                score += 15;
-
-            // Reward multi-line structure
-            if (content.Contains("\n") && content.Length > 50)
-                score += 20;
-
-            // Penalize extremely short content
-            if (content.Length < 10)
-                score -= 25;
+            score += DetectSuspiciousContent(lower);
+            score += EvaluateStructure(content);
+            score += EvaluateLength(content.Length);
 
             return Math.Clamp(score, 0, 100);
+        }
+
+        /// <summary>Evaluates suspicious content patterns</summary>
+        private int DetectSuspiciousContent(string lowerContent)
+        {
+            if (QualityHeuristics.SuspiciousPatterns.Any(p => lowerContent.Contains(p)))
+                return -QualityHeuristics.SuspiciousPenalty;
+
+            return 0;
+        }
+
+        /// <summary>Evaluates content structure (punctuation, formatting)</summary>
+        private int EvaluateStructure(string content)
+        {
+            int score = 0;
+
+            if (QualityHeuristics.PunctuationMarks.Any(p => content.Contains(p)))
+                score += QualityHeuristics.PunctuationBonus;
+
+            if (content.Contains("\n") && content.Length > QualityHeuristics.MultilineMinLength)
+                score += QualityHeuristics.MultilineBonus;
+
+            return score;
+        }
+
+        /// <summary>Evaluates content length appropriateness</summary>
+        private int EvaluateLength(int contentLength)
+        {
+            if (contentLength < QualityHeuristics.MinLength)
+                return -QualityHeuristics.TooShortPenalty;
+
+            if (contentLength > QualityHeuristics.MaxSingleLineLength)
+                return -QualityHeuristics.LargePayloadPenalty;
+
+            return 0;
         }
 
         /// <summary>
@@ -202,58 +298,27 @@ namespace DeepLearningProtocol
         /// <summary>Translates common protocol terms to Spanish</summary>
         private string TranslateToSpanish(string content)
         {
-            var translations = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
-            {
-                { "quality translation", "traducción de calidad" },
-                { "uptime calendar", "calendario de disponibilidad" },
-                { "24-hour availability", "disponibilidad de 24 horas" },
-                { "deep learning protocol", "protocolo de aprendizaje profundo" },
-                { "state interface", "interfaz de estado" },
-                { "aim interface", "interfaz de objetivo" },
-                { "depth interface", "interfaz de profundidad" }
-            };
-
-            return ReplaceTerms(content, translations);
+            return ReplaceTerms(content, TranslationDictionaries.Spanish);
         }
 
         /// <summary>Translates common protocol terms to Arabic</summary>
         private string TranslateToArabic(string content)
         {
-            var translations = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
-            {
-                { "quality translation", "ترجمة الجودة" },
-                { "uptime calendar", "تقويم المدة الزمنية" },
-                { "24-hour availability", "توفر 24 ساعة" },
-                { "deep learning protocol", "بروتوكول التعلم العميق" },
-                { "state interface", "واجهة الحالة" },
-                { "aim interface", "واجهة الهدف" },
-                { "depth interface", "واجهة العمق" }
-            };
-
-            return ReplaceTerms(content, translations);
+            return ReplaceTerms(content, TranslationDictionaries.Arabic);
         }
 
         /// <summary>Translates common protocol terms to French</summary>
         private string TranslateToFrench(string content)
         {
-            var translations = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
-            {
-                { "quality translation", "traduction de qualité" },
-                { "uptime calendar", "calendrier de disponibilité" },
-                { "24-hour availability", "disponibilité 24 heures" },
-                { "deep learning protocol", "protocole d'apprentissage profond" },
-                { "state interface", "interface d'état" },
-                { "aim interface", "interface d'objectif" },
-                { "depth interface", "interface de profondeur" }
-            };
-
-            return ReplaceTerms(content, translations);
+            return ReplaceTerms(content, TranslationDictionaries.French);
         }
 
-        /// <summary>Helper method to replace terms case-insensitively</summary>
+        /// <summary>Helper method to replace terms case-insensitively with optimized regex</summary>
         private string ReplaceTerms(string content, Dictionary<string, string> translations)
         {
             var result = content;
+            
+            // Process longer terms first to avoid partial replacements
             foreach (var kvp in translations.OrderByDescending(x => x.Key.Length))
             {
                 result = System.Text.RegularExpressions.Regex.Replace(
@@ -286,7 +351,13 @@ namespace DeepLearningProtocol
 
             var key = $"{DateTime.UtcNow:yyyyMMdd_HHmmss_fff}";
             _qualityMetrics[key] = metric;
+            
+            PersistMetricToFile(metric);
+        }
 
+        /// <summary>Persists metric to JSON file (best-effort)</summary>
+        private void PersistMetricToFile(QualityMetric metric)
+        {
             try
             {
                 var metricsFile = Path.Combine(_metricsDir, $"quality_{DateTime.UtcNow:yyyyMMdd}.json");
@@ -296,7 +367,7 @@ namespace DeepLearningProtocol
             }
             catch
             {
-                // best-effort metrics storage
+                // best-effort metrics storage; swallow errors to prevent crashes
             }
         }
 
