@@ -53,7 +53,7 @@ dotnet run --project DeepLearningProtocol/DeepLearningProtocol.csproj
 dotnet test
 ```
 
-Expected: All 7 tests pass ✅
+Expected: All tests pass ✅
 
 ---
 
