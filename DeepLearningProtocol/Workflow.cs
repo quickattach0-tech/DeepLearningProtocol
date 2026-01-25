@@ -120,6 +120,30 @@ namespace DeepLearningProtocol
         }
 
         /// <summary>
+        /// Start a new workflow stage (async version)
+        /// </summary>
+        public async Task StartStageAsync(int stageNumber, string name, string description)
+        {
+            await Task.Run(() => StartStage(stageNumber, name, description));
+        }
+
+        /// <summary>
+        /// Complete current workflow stage (async version)
+        /// </summary>
+        public async Task CompleteStageAsync(string stageName, bool success, string summary = "")
+        {
+            await Task.Run(() => CompleteStage(stageName, success, summary));
+        }
+
+        /// <summary>
+        /// Add log entry to current stage (async version)
+        /// </summary>
+        public async Task AddLogAsync(string stageName, string message)
+        {
+            await Task.Run(() => AddLog(stageName, message));
+        }
+
+        /// <summary>
         /// Complete current workflow stage
         /// </summary>
         public void CompleteStage(string stageName, bool success, string summary = "")
@@ -289,6 +313,14 @@ namespace DeepLearningProtocol
         }
 
         /// <summary>
+        /// Save workflow to JSON file with error handling (async version)
+        /// </summary>
+        public async Task SaveWorkflowToFileAsync(string workflowName)
+        {
+            await Task.Run(() => SaveWorkflowToFile(workflowName));
+        }
+
+        /// <summary>
         /// Get pipeline configuration for CI/CD
         /// </summary>
         public static List<PipelineStage> GetCIPipelineConfig()
@@ -448,6 +480,30 @@ namespace DeepLearningProtocol
         }
 
         /// <summary>
+        /// Execute development workflow (async version)
+        /// </summary>
+        public async Task ExecuteDevelopmentWorkflowAsync()
+        {
+            _logger("Starting Development Workflow (Async)...");
+            _workflowManager.SetState(WorkflowManager.WorkflowState.InProgress);
+
+            await _workflowManager.StartStageAsync(1, "Feature Development", "Code implementation and feature development");
+            await Task.Delay(1000);
+            await _workflowManager.CompleteStageAsync("Feature Development", true, "Feature implemented successfully");
+
+            await _workflowManager.StartStageAsync(2, "Unit Testing", "Local unit test execution");
+            await Task.Delay(1000);
+            await _workflowManager.CompleteStageAsync("Unit Testing", true, "All tests passed (8/8)");
+
+            await _workflowManager.StartStageAsync(3, "Code Review", "Peer code review");
+            await Task.Delay(1000);
+            await _workflowManager.CompleteStageAsync("Code Review", true, "Approved for merge");
+
+            _workflowManager.SetState(WorkflowManager.WorkflowState.Completed);
+            _logger(_workflowManager.GetWorkflowSummary());
+        }
+
+        /// <summary>
         /// Execute CI/CD pipeline workflow
         /// </summary>
         public void ExecuteCIPipelineWorkflow()
@@ -470,6 +526,34 @@ namespace DeepLearningProtocol
             _workflowManager.StartStage(4, "Artifact Publishing", "Build artifact storage");
             Thread.Sleep(500);
             _workflowManager.CompleteStage("Artifact Publishing", true, "Artifacts published (30d retention)");
+
+            _workflowManager.SetState(WorkflowManager.WorkflowState.Completed);
+            _logger(_workflowManager.GetWorkflowSummary());
+        }
+
+        /// <summary>
+        /// Execute CI/CD pipeline workflow (async version)
+        /// </summary>
+        public async Task ExecuteCIPipelineWorkflowAsync()
+        {
+            _logger("Starting CI/CD Pipeline Workflow (Async)...");
+            _workflowManager.SetState(WorkflowManager.WorkflowState.InProgress);
+
+            await _workflowManager.StartStageAsync(1, "Build Stage", "Debug/Release build compilation");
+            await Task.Delay(1500);
+            await _workflowManager.CompleteStageAsync("Build Stage", true, "Build successful - 0 errors");
+
+            await _workflowManager.StartStageAsync(2, "Testing Stage", "Unit test execution with coverage");
+            await Task.Delay(2000);
+            await _workflowManager.CompleteStageAsync("Testing Stage", true, "8/8 tests passed");
+
+            await _workflowManager.StartStageAsync(3, "Code Quality Stage", "Code style and quality checks");
+            await Task.Delay(1000);
+            await _workflowManager.CompleteStageAsync("Code Quality Stage", true, "Quality standards met");
+
+            await _workflowManager.StartStageAsync(4, "Artifact Publishing", "Build artifact storage");
+            await Task.Delay(500);
+            await _workflowManager.CompleteStageAsync("Artifact Publishing", true, "Artifacts published (30d retention)");
 
             _workflowManager.SetState(WorkflowManager.WorkflowState.Completed);
             _logger(_workflowManager.GetWorkflowSummary());
