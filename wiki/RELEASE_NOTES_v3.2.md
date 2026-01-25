@@ -27,6 +27,7 @@ This release adds a built-in SignalR server endpoint for real-time notifications
 ### 📦 Installer & Distribution
 - **Installer Version:** 3.2
 - **Installers:** Windows, Linux (systemd), macOS (launch agents)
+- **Binaries:** Self-contained binaries for Linux, Windows, and macOS are attached to the v3.2 release along with installer bundles
 - **CI/CD:** Releases now default to `v3.2` and include installers in artifacts
 
 ---
