@@ -16,6 +16,7 @@
 | [Getting-Started.md](Getting-Started.md) | New Users | Installation, build, run, first interaction |
 | [Architecture.md](Architecture.md) | Developers | System design, components, data flow |
 | [Testing.md](Testing.md) | Test Writers | Test suite, writing tests, best practices |
+| [WORKFLOW.md](WORKFLOW.md) | All Developers | Development workflow, branching, CI/CD pipeline |
 | [QUALITY_TRANSLATION_GUIDE.md](QUALITY_TRANSLATION_GUIDE.md) | Security-focused | Quality scoring, multi-language support, 24-hour uptime |
 | [WORKFLOW_PROTOCOL.md](WORKFLOW_PROTOCOL.md) | All Developers | Development workflow, CI/CD, deployment, Docker |
 | [TRANSLATOR_FEATURE.md](TRANSLATOR_FEATURE.md) | All Users | Translator module, language support, usage |
@@ -46,9 +47,10 @@
 ### 👨‍💻 I'm a Developer
 1. Read: [Architecture.md](Architecture.md) — System design
 2. Study: [Program.cs](../DeepLearningProtocol/Program.cs) — Implementation
-3. Learn: [WORKFLOW_PROTOCOL.md](WORKFLOW_PROTOCOL.md) — Development & deployment workflow
-4. Learn: [QUALITY_TRANSLATION_GUIDE.md](QUALITY_TRANSLATION_GUIDE.md) — QT system
-5. Test: [Testing.md](Testing.md) — Test suite
+3. Learn: [WORKFLOW.md](WORKFLOW.md) — Development workflow & branching strategy
+4. Learn: [WORKFLOW_PROTOCOL.md](WORKFLOW_PROTOCOL.md) — CI/CD & deployment workflow
+5. Learn: [QUALITY_TRANSLATION_GUIDE.md](QUALITY_TRANSLATION_GUIDE.md) — QT system
+6. Test: [Testing.md](Testing.md) — Test suite
 
 ### 🐳 I Want to Deploy with Docker
 1. Read: [WORKFLOW_PROTOCOL.md](WORKFLOW_PROTOCOL.md#-docker-workflow) — Docker setup

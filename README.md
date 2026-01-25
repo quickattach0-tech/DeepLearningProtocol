@@ -367,15 +367,145 @@ Press **F5** in VS Code for interactive debugging.
 
 ---
 
+## 🔄 Development Workflow
+
+### Local Development Workflow
+```
+Feature Development (Local)
+    ↓
+[1. Create Feature Branch]
+    git checkout -b feature/feature-name
+    ↓
+[2. Code Changes]
+    - Implement feature in Program.cs
+    - Add unit tests to DeepLearningProtocol.Tests/
+    - Update docs if needed
+    ↓
+[3. Local Testing]
+    dotnet build          # Verify no errors
+    dotnet test          # Run all tests (must pass)
+    dotnet run           # Manual testing
+    ↓
+[4. Commit & Push]
+    git add .
+    git commit -m "feat: description"
+    git push origin feature/feature-name
+    ↓
+[5. Pull Request]
+    GitHub PR → Code review → Merge to main
+    ↓
+[6. CI/CD Automation Triggered]
+    Debug build (PR)
+    Release build + tests (main)
+    Code coverage (main)
+    Artifact upload (main)
+```
+
+### Branch Strategy
+| Branch | Purpose | Protection |
+|--------|---------|-----------|
+| **main** | Production-ready code | ✅ PR required, CI must pass |
+| **develop** | Feature integration | ⚠️ CI/CD runs |
+| **feature/*** | Individual features | ❌ No protection |
+
+### Development Steps
+1. **Create local feature branch**
+   ```bash
+   git checkout -b feature/your-feature
+   ```
+
+2. **Implement changes**
+   - Update `/DeepLearningProtocol/Program.cs` for core logic
+   - Add tests to `/DeepLearningProtocol.Tests/DeepLearningProtocolTests.cs`
+   - Update docs in `/docs/`
+
+3. **Test locally**
+   ```bash
+   dotnet build --configuration Debug
+   dotnet test
+   dotnet run --project DeepLearningProtocol/DeepLearningProtocol.csproj
+   ```
+
+4. **Commit with meaningful message**
+   ```bash
+   git commit -m "feat: add new feature"
+   git commit -m "fix: resolve issue"
+   git commit -m "docs: update documentation"
+   ```
+
+5. **Push and create PR**
+   ```bash
+   git push origin feature/your-feature
+   # Then create PR on GitHub
+   ```
+
+### Code Quality Standards
+- ✅ All tests must pass (`dotnet test`)
+- ✅ Zero build errors (`dotnet build`)
+- ✅ Zero code warnings (strict C# checks)
+- ✅ Documentation updated for new features
+- ✅ Comments for complex logic
+- ✅ Meaningful commit messages
+
+---
+
 ## 🔄 CI/CD Pipeline
 
-GitHub Actions runs on every push:
-- ✅ Multi-platform builds (Linux, Windows, macOS)
-- ✅ Unit tests (8 tests)
-- ✅ Code coverage collection
-- ✅ Release artifact creation
+GitHub Actions runs automated checks on every push and PR:
 
-See [`.github/workflows/dotnet.yml`](.github/workflows/dotnet.yml) for details.
+### Pipeline Stages
+
+**🔍 Debug Build (Pull Requests & Non-Main Pushes)**
+- Trigger: PR to any branch OR push to develop/feature branches
+- Build: Debug configuration for quick validation
+- Tests: Run full test suite
+- Duration: ~1-2 minutes
+
+**🚀 Release Build (Main Branch Pushes)**
+- Trigger: Push to main branch
+- Matrix: .NET 10.0.x
+- Build: Release configuration
+- Tests: Full test suite with coverage collection
+- Coverage: Upload to Codecov
+- Artifacts: Upload binaries (30 day retention)
+- Duration: ~2-3 minutes
+
+**🔧 Code Quality (Main Branch Pushes)**
+- Trigger: Push to main branch
+- Checks: Code style enforcement (optional)
+- Reports: Build output analysis
+
+### Pipeline Diagram
+```
+┌─────────────────────────────────────────────────────┐
+│             GitHub Event Trigger                    │
+│  (Push to main/develop or Pull Request)            │
+└──────────────────┬──────────────────────────────────┘
+                   │
+         ┌─────────┴──────────┐
+         │                    │
+    [Debug Build]      [Release Build]
+    (PR & non-main)      (main only)
+         │                    │
+    ✓ Build              ✓ Build Release
+    ✓ Unit Tests         ✓ Unit Tests
+         │                ✓ Code Coverage
+         │                ✓ Upload Coverage
+         │                ✓ Store Artifacts
+         │                    │
+         └─────────┬──────────┘
+                   │
+         [Code Quality Check]
+         (main only - optional)
+                   │
+            ✓ Style Check
+```
+
+### Status Badges
+- **CI/CD Status**: [![CI/CD Status](https://github.com/quickattach0-tech/DeepLearningProtocol/actions/workflows/dotnet.yml/badge.svg)](https://github.com/quickattach0-tech/DeepLearningProtocol/actions/workflows/dotnet.yml)
+- **Latest Build**: Check [GitHub Actions](https://github.com/quickattach0-tech/DeepLearningProtocol/actions)
+
+See [`.github/workflows/dotnet.yml`](.github/workflows/dotnet.yml) for full pipeline configuration.
 
 ---
 
