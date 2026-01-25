@@ -16,10 +16,10 @@ Welcome to the Deep Learning Protocol Wiki! This is your comprehensive guide to 
 - **[Design Patterns](Architecture#key-design-patterns)** — Architectural patterns used
 
 ### Core Features
-- **[Data Loss Prevention (DLP)](DLP-Guide)** — Content protection explained
-- **[DLP Detection Rules](DLP-Guide#detection-rules)** — What gets blocked
-- **[Backup Mechanism](DLP-Guide#backup-mechanism)** — State recovery
-- **[DLP Scenarios](DLP-Guide#scenarios)** — Real-world examples
+- **[Quality Translation (QT)](QUALITY_TRANSLATION_GUIDE)** — Multi-language support and quality scoring explained
+- **[QT Language Support](QUALITY_TRANSLATION_GUIDE#language-support)** — Supported languages and translations
+- **[Quality Scoring System](QUALITY_TRANSLATION_GUIDE#quality-scoring)** — 0-100 quality assessment
+- **[24-Hour Uptime Calendar](QUALITY_TRANSLATION_GUIDE#uptime-tracking)** — Real-time availability tracking
 - **[Multilingual Translator](TRANSLATOR_FEATURE)** — 60+ phrase translation feature
 
 ### Development & Deployment

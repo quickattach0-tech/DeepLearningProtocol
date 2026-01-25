@@ -5,7 +5,14 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Version>3.0</Version>
+    <Version>3.1</Version>
+    <Title>Deep Learning Protocol</Title>
+    <Description>A hierarchical multi-interface reasoning system with Quality Translation capabilities, multi-language support, 24-hour uptime tracking, and enterprise-grade code management.</Description>
+    <Authors>quickattach0-tech</Authors>
+    <PackageProjectUrl>https://github.com/quickattach0-tech/DeepLearningProtocol</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/quickattach0-tech/DeepLearningProtocol</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>

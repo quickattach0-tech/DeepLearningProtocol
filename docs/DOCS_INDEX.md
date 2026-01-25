@@ -74,10 +74,10 @@
 2. Follow: Setup process
 3. Use: [Wiki-Home.md](Wiki-Home.md) — Home page template
 
-### 🛡️ I'm Learning About Data Protection
-1. Read: [DLP-Guide.md](DLP-Guide.md) — Comprehensive guide
-2. Understand: [Scenarios](DLP-Guide.md#scenarios) — Real examples
-3. Test: [Testing DLP](DLP-Guide.md#testing-dlp)
+### 🛡️ I'm Learning About Quality Translation & Security
+1. Read: [QUALITY_TRANSLATION_GUIDE.md](QUALITY_TRANSLATION_GUIDE.md) — Comprehensive guide
+2. Understand: [Quality Scoring](QUALITY_TRANSLATION_GUIDE.md#quality-scoring) — Assessment system
+3. Learn: [Multi-language Support](QUALITY_TRANSLATION_GUIDE.md#language-support) — Supported languages
 
 ---
 
@@ -89,7 +89,7 @@
 
 ### Core Documentation
 - [Architecture.md](Architecture.md) — System design
-- [DLP-Guide.md](DLP-Guide.md) — Data protection
+- [QUALITY_TRANSLATION_GUIDE.md](QUALITY_TRANSLATION_GUIDE.md) — Quality translation & security
 - [Testing.md](Testing.md) — Test suite
 
 ### Development
