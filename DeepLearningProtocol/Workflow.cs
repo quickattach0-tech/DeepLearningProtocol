@@ -37,8 +37,8 @@ namespace DeepLearningProtocol
         public class WorkflowStage
         {
             public int StageNumber { get; set; }
-            public string Name { get; set; }
-            public string Description { get; set; }
+            public string? Name { get; set; }
+            public string? Description { get; set; }
             public DateTime StartTime { get; set; }
             public DateTime? EndTime { get; set; }
             public bool Success { get; set; }
@@ -56,10 +56,10 @@ namespace DeepLearningProtocol
         /// </summary>
         public class PipelineStage
         {
-            public string Name { get; set; }
-            public string Trigger { get; set; }
+            public string? Name { get; set; }
+            public string? Trigger { get; set; }
             public List<string> Steps { get; set; } = new();
-            public string[] SupportedBranches { get; set; }
+            public string[]? SupportedBranches { get; set; }
             public bool Enabled { get; set; } = true;
             
             public override string ToString()
@@ -310,7 +310,7 @@ namespace DeepLearningProtocol
             {
                 Console.WriteLine($"\n  [{stage.Name}]");
                 Console.WriteLine($"    Trigger: {stage.Trigger}");
-                Console.WriteLine($"    Branches: {string.Join(", ", stage.SupportedBranches)}");
+                Console.WriteLine($"    Branches: {string.Join(", ", stage.SupportedBranches ?? Array.Empty<string>())}");
                 Console.WriteLine($"    Steps ({stage.Steps.Count}):");
                 foreach (var step in stage.Steps)
                 {
@@ -343,7 +343,7 @@ namespace DeepLearningProtocol
         private readonly WorkflowManager _workflowManager;
         private readonly Action<string> _logger;
 
-        public WorkflowExecutor(WorkflowManager manager, Action<string> logger = null)
+        public WorkflowExecutor(WorkflowManager manager, Action<string>? logger = null)
         {
             _workflowManager = manager;
             _logger = logger ?? Console.WriteLine;
