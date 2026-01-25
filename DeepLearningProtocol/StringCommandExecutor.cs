@@ -13,14 +13,14 @@ namespace DeepLearningProtocol
     {
         private readonly ProtocolDbContext _context;
         private readonly DeepLearningProtocol _protocol;
-        private readonly DataLossPrevention _dlp;
+        private readonly QualityTranslation _qt;
 
         /// <summary>Initializes the command executor with database context and protocol</summary>
-        public StringCommandExecutor(ProtocolDbContext context, DeepLearningProtocol protocol, DataLossPrevention dlp)
+        public StringCommandExecutor(ProtocolDbContext context, DeepLearningProtocol protocol, QualityTranslation qt)
         {
             _context = context ?? new ProtocolDbContext();
             _protocol = protocol ?? new DeepLearningProtocol();
-            _dlp = dlp ?? new DataLossPrevention();
+            _qt = qt ?? new QualityTranslation();
         }
 
         /// <summary>
@@ -37,15 +37,17 @@ namespace DeepLearningProtocol
                 if (command == null)
                     return $"[ERROR] Command '{commandName}' not found or disabled.";
 
-                // Check DLP protection
+                // Check Quality Translation protection
                 if (command.ApplyDLPProtection)
                 {
-                    var isSuspicious = _dlp.IsPotentialMeme(command.CommandPattern);
-                    if (isSuspicious)
+                    var qualityScore = _qt.AssessQuality(command.CommandPattern);
+                    if (qualityScore < 30)
                     {
-                        _dlp.BackupState(command.CommandPattern);
-                        return "[DLP-BLOCKED] Command pattern contains suspicious content.";
+                        _qt.StoreQualityMetric(command.CommandPattern, qualityScore, QualityTranslation.Language.English, "");
+                        return "[QT-BLOCKED] Command pattern quality score too low.";
                     }
+                    // Record uptime event
+                    _qt.RecordUptimeEvent();
                 }
 
                 // Execute through protocol with configured depth

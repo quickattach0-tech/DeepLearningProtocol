@@ -5,7 +5,7 @@ namespace DeepLearningProtocol
     /// <summary>
     /// DeepLearningProtocol is the main orchestrator combining all interfaces and components.
     /// It implements a hierarchical reasoning system with state management, goal pursuit, 
-    /// and depth-based recursive processing. DLP protection is integrated throughout.
+    /// and depth-based recursive processing. QT (Quality Translation) protection is integrated throughout.
     /// </summary>
     public class DeepLearningProtocol : AbstractCore, IAimInterface, IDepthInterface, IStateInterface
     {
@@ -15,8 +15,8 @@ namespace DeepLearningProtocol
         /// <summary>Tracks the current goal/aim</summary>
         private string _aim = "General Reasoning";
         
-        /// <summary>DLP instance for content protection</summary>
-        private readonly DataLossPrevention _dlp = new();
+        /// <summary>QT instance for quality translation and uptime tracking</summary>
+        private readonly QualityTranslation _qt = new();
 
         /// <summary>
         /// Gets the current state of the protocol.
@@ -25,24 +25,27 @@ namespace DeepLearningProtocol
         public string GetCurrentState() => _currentState;
 
         /// <summary>
-        /// Updates the protocol state with DLP protection.
-        /// Backs up previous state and blocks suspicious content.
+        /// Updates the protocol state with QT protection.
+        /// Assesses quality and blocks low-quality content.
         /// </summary>
         /// <param name="newState">The new state to set</param>
         public void UpdateState(string newState)
         {
-            // Backup current state before changing
-            try { _dlp.BackupState(_currentState); } catch { }
-
-            // If the incoming state looks like meme or binary payload, block it
-            if (_dlp.IsPotentialMeme(newState))
+            // Assess quality before changing state
+            int qualityScore = _qt.AssessQuality(newState);
+            
+            // If quality score is too low, block it
+            if (qualityScore < 30)
             {
-                Console.WriteLine("DLP: Potential meme-like content detected. State update blocked and backed up.");
-                _currentState = $"[DLP-BLOCKED]";
+                Console.WriteLine("QT: Content quality score too low. State update blocked.");
+                _qt.StoreQualityMetric(newState, qualityScore, QualityTranslation.Language.English, "");
+
+                _currentState = $"[QT-BLOCKED]";
                 return;
             }
 
             _currentState = newState;
+            _qt.RecordUptimeEvent();
             Console.WriteLine($"State updated: {_currentState}");
         }
 

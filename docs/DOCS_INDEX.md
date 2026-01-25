@@ -16,7 +16,7 @@
 | [Getting-Started.md](Getting-Started.md) | New Users | Installation, build, run, first interaction |
 | [Architecture.md](Architecture.md) | Developers | System design, components, data flow |
 | [Testing.md](Testing.md) | Test Writers | Test suite, writing tests, best practices |
-| [DLP-Guide.md](DLP-Guide.md) | Security-focused | Data protection, detection rules, backups |
+| [QUALITY_TRANSLATION_GUIDE.md](QUALITY_TRANSLATION_GUIDE.md) | Security-focused | Quality scoring, multi-language support, 24-hour uptime |
 | [WORKFLOW_PROTOCOL.md](WORKFLOW_PROTOCOL.md) | All Developers | Development workflow, CI/CD, deployment, Docker |
 | [TRANSLATOR_FEATURE.md](TRANSLATOR_FEATURE.md) | All Users | Translator module, language support, usage |
 | [TRANSLATION_DATABASE.md](TRANSLATION_DATABASE.md) | Database Users | Translation storage, rule management, quality tracking |
@@ -47,7 +47,7 @@
 1. Read: [Architecture.md](Architecture.md) — System design
 2. Study: [Program.cs](../DeepLearningProtocol/Program.cs) — Implementation
 3. Learn: [WORKFLOW_PROTOCOL.md](WORKFLOW_PROTOCOL.md) — Development & deployment workflow
-4. Learn: [DLP-Guide.md](DLP-Guide.md) — Protection layer
+4. Learn: [QUALITY_TRANSLATION_GUIDE.md](QUALITY_TRANSLATION_GUIDE.md) — QT system
 5. Test: [Testing.md](Testing.md) — Test suite
 
 ### 🐳 I Want to Deploy with Docker

@@ -19,7 +19,7 @@ namespace DeepLearningProtocol
                 "  • Depth Interface (recursive processing)\n" +
                 "  • Aim Interface (goal-directed exploration)\n" +
                 "  • State Interface (state management)\n" +
-                "  • Data Loss Prevention (DLP) for content protection"
+                "  • Quality Translation (QT) for multi-language content protection"
             )},
             { 2, (
                 "How do I run the program?",
@@ -29,11 +29,12 @@ namespace DeepLearningProtocol
                 "  3. Interactive: Run it and follow the menu prompts"
             )},
             { 3, (
-                "What is Data Loss Prevention (DLP)?",
+                "What is Quality Translation (QT)?",
                 "A protective layer that:\n" +
-                "  • Detects meme/binary content (.png, .jpg, base64, 'meme' keyword)\n" +
-                "  • Blocks suspicious updates to prevent data loss\n" +
-                "  • Backs up states to ./.dlp_backups/ with timestamps"
+                "  • Assesses content quality (0-100 score)\n" +
+                "  • Supports 4 languages: English, Spanish, Arabic, French\n" +
+                "  • Tracks 24-hour uptime calendar with hourly metrics\n" +
+                "  • Blocks low-quality updates to preserve data integrity"
             )},
             { 4, (
                 "What are the core components?",
@@ -62,12 +63,12 @@ namespace DeepLearningProtocol
                 "This executes 8 XUnit tests covering all core methods and edge cases"
             )},
             { 8, (
-                "What happens if I input meme-like content?",
-                "The DLP layer:\n" +
-                "  • Detects the suspicious content\n" +
-                "  • Backs up your current state\n" +
-                "  • Blocks the update\n" +
-                "  • Sets state to [DLP-BLOCKED] to prevent accidental loss"
+                "What happens if I input low-quality content?",
+                "The QT (Quality Translation) layer:\n" +
+                "  • Assesses content quality (0-100 score)\n" +
+                "  • Blocks updates with score < 30\n" +
+                "  • Records metrics and uptime events\n" +
+                "  • Sets state to [QT-BLOCKED] to preserve data integrity"
             )},
             { 9, (
                 "How do I extend the project?",
