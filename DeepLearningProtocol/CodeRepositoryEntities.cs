@@ -31,14 +31,14 @@ namespace DeepLearningProtocol
         /// Full source code content
         /// </summary>
         [Required]
-        public string CodeContent { get; set; }
+        public string CodeContent { get; set; } = string.Empty;
 
         /// <summary>
         /// Programming language (C#, JSON, XML, Markdown, etc.)
         /// </summary>
         [Required]
         [StringLength(50)]
-        public string Language { get; set; }
+        public string Language { get; set; } = string.Empty;
 
         /// <summary>
         /// File size in bytes
@@ -70,7 +70,7 @@ namespace DeepLearningProtocol
         /// Purpose or description of the file
         /// </summary>
         [StringLength(500)]
-        public string Purpose { get; set; }
+        public string? Purpose { get; set; }
 
         /// <summary>
         /// Review status (New, Reviewed, Approved, Deprecated)
@@ -82,13 +82,13 @@ namespace DeepLearningProtocol
         /// Notes from review process
         /// </summary>
         [StringLength(1000)]
-        public string ReviewNotes { get; set; }
+        public string? ReviewNotes { get; set; }
 
         /// <summary>
         /// Suggested improvements or updates
         /// </summary>
         [StringLength(1000)]
-        public string SuggestedUpdates { get; set; }
+        public string? SuggestedUpdates { get; set; }
 
         /// <summary>
         /// Number of times code has been reviewed from console

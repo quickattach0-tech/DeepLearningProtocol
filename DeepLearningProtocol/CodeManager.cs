@@ -63,7 +63,7 @@ namespace DeepLearningProtocol
         /// <summary>
         /// Retrieve a code file for review
         /// </summary>
-        public CodeFile GetCodeFile(int id)
+        public CodeFile? GetCodeFile(int id)
         {
             var file = _context.CodeFiles.FirstOrDefault(f => f.Id == id && f.IsActive);
             if (file != null)
@@ -78,7 +78,7 @@ namespace DeepLearningProtocol
         /// <summary>
         /// Get code file by file name
         /// </summary>
-        public CodeFile GetCodeFileByName(string fileName)
+        public CodeFile? GetCodeFileByName(string fileName)
         {
             return _context.CodeFiles.FirstOrDefault(f => f.FileName == fileName && f.IsActive);
         }
