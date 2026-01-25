@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<?define ProductVersion="3.2.0" ?>
+	<?define ProductUpgradeCode="7E4A1F3C-6B2F-4F1D-9E8B-3D5C2F4A1E9D" ?>
+	<?define BinPath="..\DeepLearningProtocol\bin\Release\net10.0\win-x64\publish" ?>
+
+	<Product Id="*" 
+		Name="Deep Learning Protocol" 
+		Language="1033" 
+		Version="$(var.ProductVersion)" 
+		Manufacturer="quickattach0-tech" 
+		UpgradeCode="$(var.ProductUpgradeCode)">
+		
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" Platform="x64" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate EmbedCab="yes" />
+
+		<Feature Id="ProductFeature" Title="Deep Learning Protocol" Level="1">
+			<ComponentRef Id="ProgramFilesComponent" />
+			<ComponentRef Id="DesktopShortcut" />
+			<ComponentRef Id="StartMenuShortcut" />
+		</Feature>
+
+		<WixUI Id="WixUI_InstallDir" />
+		<UIRef Id="WixUI_ErrorProgressText" />
+	</Product>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLFOLDER" Name="Deep Learning Protocol" />
+			</Directory>
+			<Directory Id="ProgramMenuFolder">
+				<Directory Id="ApplicationProgramsFolder" Name="Deep Learning Protocol" />
+			</Directory>
+			<Directory Id="DesktopFolder" Name="Desktop" />
+		</Directory>
+	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+			<Component Id="ProgramFilesComponent" Guid="*">
+				<File Id="DeepLearningProtocolExe" 
+					Source="$(var.BinPath)\DeepLearningProtocol.exe" 
+					KeyPath="yes" 
+					Checksum="yes" />
+				<File Id="DeepLearningProtocolDll" 
+					Source="$(var.BinPath)\DeepLearningProtocol.dll" />
+				<!-- Include resource files -->
+				<File Id="ConfigJson" Source="$(var.BinPath)\appsettings.json" />
+			</Component>
+		</ComponentGroup>
+
+		<Component Id="DesktopShortcut" Directory="DesktopFolder" Guid="*">
+			<Shortcut Id="DesktopShortcut" 
+				Name="Deep Learning Protocol" 
+				Target="[INSTALLFOLDER]DeepLearningProtocol.exe" 
+				WorkingDirectory="INSTALLFOLDER" />
+			<RegistryValue Root="HKCU" 
+				Key="Software\Deep Learning Protocol" 
+				Name="DesktopShortcut" 
+				Type="integer" 
+				Value="1" 
+				KeyPath="yes" />
+		</Component>
+
+		<Component Id="StartMenuShortcut" Directory="ApplicationProgramsFolder" Guid="*">
+			<Shortcut Id="StartMenuShortcut" 
+				Name="Deep Learning Protocol" 
+				Target="[INSTALLFOLDER]DeepLearningProtocol.exe" 
+				WorkingDirectory="INSTALLFOLDER" />
+			<Shortcut Id="UninstallProduct" 
+				Name="Uninstall Deep Learning Protocol" 
+				Target="[System64Folder]msiexec.exe" 
+				Arguments="/x [ProductCode]" />
+			<RemoveFolder Id="ApplicationProgramsFolder" On="uninstall" />
+			<RegistryValue Root="HKCU" 
+				Key="Software\Deep Learning Protocol" 
+				Name="StartMenuShortcut" 
+				Type="integer" 
+				Value="1" 
+				KeyPath="yes" />
+		</Component>
+	</Fragment>
+</Wix>

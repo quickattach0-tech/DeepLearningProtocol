@@ -9,6 +9,7 @@ on:
 env:
   DOTNET_VERSION: '10.0.x'
   BUILD_CONFIGURATION: Release
+  VERSION: '3.2'
   ARTIFACT_RETENTION_DAYS: 30
   RELEASE_ARTIFACT_RETENTION_DAYS: 90
 
@@ -131,6 +132,30 @@ jobs:
     - name: Publish framework-dependent release
       run: dotnet publish DeepLearningProtocol/DeepLearningProtocol.csproj -c ${{ env.BUILD_CONFIGURATION }} -o ./release-build/framework-dependent
 
+  # Docker build validation
+  docker-build:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build Docker image (validate)
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: Dockerfile
+        push: false
+        tags: deeplearningprotocol:${{ env.VERSION }}
+
     - name: Create release archive (Linux)
       run: tar -czf release-build/deeplearning-protocol-linux-x64.tar.gz -C release-build linux-x64
 
@@ -143,6 +168,78 @@ jobs:
     - name: Create release archive (Framework-dependent)
       run: tar -czf release-build/deeplearning-protocol-framework-dependent.tar.gz -C release-build framework-dependent
 
+    # Installer creation
+    - name: Create Windows Installer (NSIS/Batch)
+      run: |
+        mkdir -p release-build/installers
+        cp Installers/install-windows.bat release-build/installers/
+        echo "Windows installer created"
+
+    - name: Create Linux Installer Script
+      run: |
+        cp Installers/install-linux.sh release-build/installers/
+        chmod +x release-build/installers/install-linux.sh
+        echo "Linux installer created"
+
+    - name: Create macOS Installer Script
+      run: |
+        cp Installers/install-macos.sh release-build/installers/
+        chmod +x release-build/installers/install-macos.sh
+        echo "macOS installer created"
+
+    - name: Package Installers
+      run: |
+        cd release-build/installers
+        tar -czf ../deeplearning-protocol-installers.tar.gz *.sh *.bat
+        zip -r ../deeplearning-protocol-installers.zip *.sh *.bat
+        cd ../..
+        ls -lh release-build/deeplearning-protocol-installers.*
+
+    - name: Create Release on GitHub
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: |
+          release-build/deeplearning-protocol-linux-x64.tar.gz
+          release-build/deeplearning-protocol-win-x64.zip
+          release-build/deeplearning-protocol-osx-x64.tar.gz
+          release-build/deeplearning-protocol-framework-dependent.tar.gz
+          release-build/deeplearning-protocol-installers.tar.gz
+          release-build/deeplearning-protocol-installers.zip
+        body: |
+          # Deep Learning Protocol v${{ env.VERSION }}
+          
+          **Highlights:** This release adds a SignalR server endpoint (`/hub/notifications`) and updates Docker to use the ASP.NET runtime with port 80 exposed for web/SignalR support.
+          
+          ## Release Contents
+          
+          ### Self-Contained Binaries
+          - **deeplearning-protocol-linux-x64.tar.gz** - Linux executable (x64)
+          - **deeplearning-protocol-win-x64.zip** - Windows executable (x64)
+          - **deeplearning-protocol-osx-x64.tar.gz** - macOS executable (x64)
+          - **deeplearning-protocol-framework-dependent.tar.gz** - Framework-dependent build
+          
+          ### Installers (Recommended)
+          - **deeplearning-protocol-installers.tar.gz** - All installer scripts (Unix format)
+          - **deeplearning-protocol-installers.zip** - All installer scripts (Windows format)
+          
+          ## Installation Instructions
+          
+          ### Windows
+          1. Extract `deeplearning-protocol-installers.zip`
+          2. Right-click `install-windows.bat` and select "Run as Administrator"
+          3. Follow the installation wizard
+          
+          ### Linux
+          1. Extract `deeplearning-protocol-installers.tar.gz`
+          2. Run: `sudo bash install-linux.sh`
+          3. Start the service: `sudo systemctl start deep-learning-protocol`
+          
+          ### macOS
+          1. Extract `deeplearning-protocol-installers.tar.gz`
+          2. Run: `sudo bash install-macos.sh`
+          3. Load the launch agent: `launchctl load /Library/LaunchAgents/com.quickattach0tech.deeplearningprotocol.plist`
+
     - name: Upload multi-platform release artifacts
       uses: actions/upload-artifact@v4
       with:
@@ -150,6 +247,13 @@ jobs:
         path: |
           release-build/deeplearning-protocol-*.tar.gz
           release-build/deeplearning-protocol-*.zip
+        retention-days: ${{ env.RELEASE_ARTIFACT_RETENTION_DAYS }}
+
+    - name: Upload installers artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: deeplearning-protocol-installers
+        path: release-build/installers/
         retention-days: ${{ env.RELEASE_ARTIFACT_RETENTION_DAYS }}
 
     - name: Upload binaries artifact
