@@ -99,8 +99,9 @@ namespace DeepLearningProtocol
                 Console.WriteLine("1. Run Interactive Protocol");
                 Console.WriteLine("2. View FAQ");
                 Console.WriteLine("3. Translate Text");
-                Console.WriteLine("4. Exit\n");
-                Console.Write("Choose an option (1-4): ");
+                Console.WriteLine("4. View System Data Map");
+                Console.WriteLine("5. Exit\n");
+                Console.Write("Choose an option (1-5): ");
 
                 var choice = Console.ReadLine();
                 switch (choice)
@@ -115,6 +116,9 @@ namespace DeepLearningProtocol
                         RunTranslator();
                         break;
                     case "4":
+                        DisplaySystemDataMap();
+                        break;
+                    case "5":
                         Console.WriteLine("\nThank you for using Deep Learning Protocol!");
                         return;
                     default:
@@ -315,6 +319,54 @@ namespace DeepLearningProtocol
 
             Console.Write("\nPress Enter to return to translator menu...");
             Console.ReadLine();
+        }
+
+        /// <summary>
+        /// Displays the system data translation map for all core data.
+        /// Shows states, interfaces, and operations in selected language.
+        /// </summary>
+        private static void DisplaySystemDataMap()
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine("╔════════════════════════════════════════════════════════╗");
+                Console.WriteLine("║            System Data Translation Map                ║");
+                Console.WriteLine("╚════════════════════════════════════════════════════════╝\n");
+
+                Console.WriteLine($"Total system data entries: {CoreData.GetTotalDataSize()}\n");
+
+                Console.WriteLine("Select language to view translations:");
+                Console.WriteLine("1. Spanish");
+                Console.WriteLine("2. Arabic");
+                Console.WriteLine("3. French");
+                Console.WriteLine("4. Back to Main Menu\n");
+
+                Console.Write("Choose language (1-4): ");
+                var choice = Console.ReadLine();
+
+                var language = choice switch
+                {
+                    "1" => Translator.Language.Spanish,
+                    "2" => Translator.Language.Arabic,
+                    "3" => Translator.Language.French,
+                    "4" => null,
+                    _ => (Translator.Language?)null
+                };
+
+                if (choice == "4")
+                    return;
+
+                if (language.HasValue)
+                {
+                    CoreData.DisplayDataMap(language.Value);
+                }
+                else
+                {
+                    Console.WriteLine("\nInvalid choice. Press Enter to continue...");
+                    Console.ReadLine();
+                }
+            }
         }
 
         /// <summary>
