@@ -172,5 +172,7 @@ For installation issues or customization help:
 
 ---
 
-**Version:** 3.1  
+**Version:** 3.2  
 **Last Updated:** January 25, 2026
+
+**Note:** To provide a macOS app icon, place a generated `Icon.icns` in the `Icon.iconset` directory created by `install-macos.sh`. See the macOS developer docs or macOS `iconutil` for conversion instructions.

@@ -102,19 +102,30 @@ EOF
 
 # Create application icon
 create_icon() {
-  echo "Creating application icon..."
-  
+  echo "Creating application icon directory..."
+
   ICONS_DIR="$INSTALL_DIR/Icon.iconset"
   mkdir -p "$ICONS_DIR"
-  
-  # Note: In a real scenario, you would include actual icon images
-  # This is a placeholder
-  cat > "$ICONS_DIR/Icon.txt" << 'EOF'
-Application icon placeholder
-Place icon.icns in the Icon.iconset directory
+
+  # Add README with guidance on placing icon assets
+  cat > "$ICONS_DIR/README.md" << 'EOF'
+# Icon installation
+Place a valid `Icon.icns` file here to provide an application icon.
+You can create an `.icns` from PNG assets on macOS using:
+
+  mkdir -p Icon.iconset
+  sips -z 16 16     icon-16.png --out Icon.iconset/icon_16x16.png
+  sips -z 32 32     icon-16@2x.png --out Icon.iconset/icon_16x16@2x.png
+  sips -z 32 32     icon-32.png --out Icon.iconset/icon_32x32.png
+  sips -z 64 64     icon-32@2x.png --out Icon.iconset/icon_32x32@2x.png
+  sips -z 128 128   icon-128.png --out Icon.iconset/icon_128x128.png
+  sips -z 256 256   icon-128@2x.png --out Icon.iconset/icon_128x128@2x.png
+  iconutil -c icns Icon.iconset
+
+Copy the resulting `Icon.icns` to this directory.
 EOF
-  
-  echo -e "${GREEN}✓ Application icon directory created${NC}"
+
+  echo -e "${GREEN}✓ Application icon directory created (place Icon.icns in $ICONS_DIR)${NC}"
 }
 
 # Display installation summary
