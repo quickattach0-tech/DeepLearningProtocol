@@ -1,6 +1,6 @@
 # Deep Learning Protocol
 
-> A hierarchical multi-interface reasoning system with Core Translation (CT) capabilities, multi-language support, 24-hour uptime tracking, and enterprise-grade code management.
+> A hierarchical multi-interface reasoning system with Core Translation (CT) capabilities, multi-language support, weekly uptime tracking, and enterprise-grade code management.
 
 [![CI/CD Status](https://github.com/quickattach0-tech/DeepLearningProtocol/actions/workflows/dotnet.yml/badge.svg)](https://github.com/quickattach0-tech/DeepLearningProtocol/actions/workflows/dotnet.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -9,14 +9,14 @@
 
 ---
 
-## 🎉 v3.1 Release: Core Translation & 24-Hour Uptime!
+## 🎉 v3.1 Release: Core Translation & Weekly Uptime!
 
 > **What's New in v3.1?**
 >
 > Major feature release introducing **Core Translation (CT)** system:
 >
 > - 🌍 **Core Translation (CT)** — Replaces DLP with multi-language support (English, Spanish, Arabic, French)
-> - ⏰ **24-Hour Uptime Calendar** — Real-time hourly availability tracking with metrics
+> - ⏰ **Weekly Uptime Calendar** — Real-time daily availability tracking with metrics
 > - 🎯 **Quality Scoring** — Content assessment system (0-100 scale) for data integrity
 > - 📊 **Translation Metrics** — Store and analyze translation quality across all languages
 > - 🔄 **Enhanced Protection** — Language-aware content validation with quality thresholds
@@ -33,7 +33,7 @@ This application is an **AI-enhanced hierarchical reasoning system** that proces
 ### **Core Capabilities**
 - 📊 **Multi-layer Reasoning**: Process information through AbstractCore, State, Depth, and Aim interfaces
 - 🌍 **Core Translation (CT)**: Multi-language support with quality scoring for 4 languages
-- ⏰ **24-Hour Uptime Calendar**: Real-time hourly tracking of system availability and events
+- ⏰ **Weekly Uptime Calendar**: Real-time daily tracking of system availability and events
 - 💾 **Persistent Storage**: SQL Server integration with Entity Framework Core 9.0.0
 - 📊 **Quality Metrics**: Assess, score, and store translation quality (0-100 scale)
 - 📝 **Code Intelligence**: Store, review, and manage entire codebase with quality metrics

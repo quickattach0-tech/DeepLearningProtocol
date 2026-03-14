@@ -41,7 +41,7 @@ namespace DeepLearningProtocol
         {
             { "quality translation", "traducción de calidad" },
             { "uptime calendar", "calendario de disponibilidad" },
-            { "24-hour availability", "disponibilidad de 24 horas" },
+            { "weekly availability", "disponibilidad semanal" },
             { "deep learning protocol", "protocolo de aprendizaje profundo" },
             { "state interface", "interfaz de estado" },
             { "aim interface", "interfaz de objetivo" },
@@ -53,7 +53,7 @@ namespace DeepLearningProtocol
         {
             { "quality translation", "ترجمة الجودة" },
             { "uptime calendar", "تقويم المدة الزمنية" },
-            { "24-hour availability", "توفر 24 ساعة" },
+            { "weekly availability", "توفر أسبوعي" },
             { "deep learning protocol", "بروتوكول التعلم العميق" },
             { "state interface", "واجهة الحالة" },
             { "aim interface", "واجهة الهدف" },
@@ -65,7 +65,7 @@ namespace DeepLearningProtocol
         {
             { "quality translation", "traduction de qualité" },
             { "uptime calendar", "calendrier de disponibilité" },
-            { "24-hour availability", "disponibilité 24 heures" },
+            { "weekly availability", "disponibilité hebdomadaire" },
             { "deep learning protocol", "protocole d'apprentissage profond" },
             { "state interface", "interface d'état" },
             { "aim interface", "interface d'objectif" },
@@ -75,7 +75,7 @@ namespace DeepLearningProtocol
 
     /// <summary>
     /// CoreTranslation (CT) is a multi-language, uptime-aware system that validates content quality
-    /// and provides real-time translation across 4 supported languages with 24-hour uptime tracking.
+    /// and provides real-time translation across 4 supported languages with weekly uptime tracking.
     /// It replaces the previous DataLossPrevention layer with enhanced language support and availability monitoring.
     /// </summary>
     public class CoreTranslation
@@ -95,8 +95,8 @@ namespace DeepLearningProtocol
             { Language.French, "fr" }
         };
 
-        /// <summary>24-hour uptime tracking (hourly buckets)</summary>
-        private readonly Dictionary<int, int> _uptimeHours = new();
+        /// <summary>Weekly uptime tracking (daily buckets for 7 days)</summary>
+        private readonly Dictionary<int, int> _uptimeDays = new();
         private readonly object _uptimeLock = new();
 
         /// <summary>Quality metrics storage</summary>
@@ -134,39 +134,39 @@ namespace DeepLearningProtocol
         }
 
         /// <summary>
-        /// Initializes the 24-hour uptime calendar with hourly tracking.
-        /// Creates slots for all 24 hours with initial values.
+        /// Initializes the weekly uptime calendar with daily tracking.
+        /// Creates slots for all 7 days with initial values.
         /// </summary>
         private void InitializeUptimeCalendar()
         {
             lock (_uptimeLock)
             {
-                for (int hour = 0; hour < 24; hour++)
+                for (int day = 0; day < 7; day++)
                 {
-                    _uptimeHours[hour] = 0;
+                    _uptimeDays[day] = 0;
                 }
             }
         }
 
         /// <summary>
-        /// Records an uptime event for the current hour.
-        /// Maintains 24-hour availability metrics.
+        /// Records an uptime event for the current day.
+        /// Maintains weekly availability metrics.
         /// </summary>
         public void RecordUptimeEvent()
         {
             lock (_uptimeLock)
             {
-                int currentHour = DateTime.Now.Hour;
-                if (!_uptimeHours.ContainsKey(currentHour))
-                    _uptimeHours[currentHour] = 0;
+                int currentDay = (int)DateTime.Now.DayOfWeek;
+                if (!_uptimeDays.ContainsKey(currentDay))
+                    _uptimeDays[currentDay] = 0;
                 
-                _uptimeHours[currentHour]++;
-                LogUptimeEvent(currentHour);
+                _uptimeDays[currentDay]++;
+                LogUptimeEvent(currentDay);
             }
         }
 
         /// <summary>Logs uptime event to file (best-effort)</summary>
-        private void LogUptimeEvent(int hour)
+        private void LogUptimeEvent(int day)
         {
             try
             {
@@ -181,33 +181,33 @@ namespace DeepLearningProtocol
         }
 
         /// <summary>
-        /// Gets the 24-hour uptime availability summary.
-        /// Returns a dictionary mapping hours (0-23) to event counts.
+        /// Gets the weekly uptime availability summary.
+        /// Returns a dictionary mapping days (0-6, Sunday=0) to event counts.
         /// </summary>
-        /// <returns>Dictionary of hourly uptime metrics</returns>
+        /// <returns>Dictionary of daily uptime metrics</returns>
         public Dictionary<int, int> GetUptimeCalendar()
         {
             lock (_uptimeLock)
             {
-                return new Dictionary<int, int>(_uptimeHours);
+                return new Dictionary<int, int>(_uptimeDays);
             }
         }
 
         /// <summary>
-        /// Calculates total uptime availability percentage based on 24-hour calendar.
+        /// Calculates total uptime availability percentage based on weekly calendar.
         /// </summary>
         /// <returns>Availability percentage (0-100)</returns>
         public int GetUptimePercentage()
         {
             lock (_uptimeLock)
             {
-                if (_uptimeHours.Count == 0) return 100;
+                if (_uptimeDays.Count == 0) return 100;
                 
-                int totalEvents = _uptimeHours.Values.Sum();
-                int activeHours = _uptimeHours.Count(x => x.Value > 0);
+                int totalEvents = _uptimeDays.Values.Sum();
+                int activeDays = _uptimeDays.Count(x => x.Value > 0);
                 
                 if (totalEvents == 0) return 100;
-                return Math.Min(100, (activeHours * 100) / 24);
+                return Math.Min(100, (activeDays * 100) / 7);
             }
         }
 
@@ -374,9 +374,9 @@ namespace DeepLearningProtocol
         /// <summary>
         /// Gets all stored quality metrics within a specified timeframe.
         /// </summary>
-        /// <param name="hoursBack">Number of hours to look back (default: 24)</param>
+        /// <param name="hoursBack">Number of hours to look back (default: 168 for weekly)</param>
         /// <returns>Collection of quality metrics</returns>
-        public IEnumerable<QualityMetric> GetQualityMetrics(int hoursBack = 24)
+        public IEnumerable<QualityMetric> GetQualityMetrics(int hoursBack = 168)
         {
             var cutoff = DateTime.UtcNow.AddHours(-hoursBack);
             return _qualityMetrics.Values.Where(m => m.Timestamp >= cutoff);

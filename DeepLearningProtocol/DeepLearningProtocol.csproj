@@ -7,7 +7,7 @@
     <Nullable>enable</Nullable>
     <Version>3.1</Version>
     <Title>Deep Learning Protocol</Title>
-    <Description>A hierarchical multi-interface reasoning system with Core Translation capabilities, multi-language support, 24-hour uptime tracking, and enterprise-grade code management.</Description>
+    <Description>A hierarchical multi-interface reasoning system with Core Translation capabilities, multi-language support, weekly uptime tracking, and enterprise-grade code management.</Description>
     <Authors>quickattach0-tech</Authors>
     <PackageProjectUrl>https://github.com/quickattach0-tech/DeepLearningProtocol</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Core Translation (CT)** is a replacement for the previous Data Loss Prevention (DLP) system, offering enhanced capabilities through multi-language support, quality scoring, and 24-hour uptime tracking. It provides a comprehensive approach to content validation with global language awareness.
+**Core Translation (CT)** is a replacement for the previous Data Loss Prevention (DLP) system, offering enhanced capabilities through multi-language support, quality scoring, and weekly uptime tracking. It provides a comprehensive approach to content validation with global language awareness.
 
 Version: **3.1+**
 
@@ -164,7 +164,7 @@ string spanish = qt.Translate("deep learning protocol", CoreTranslation.Language
 **Supported Translations:**
 - `quality translation` → `traducción de calidad`
 - `uptime calendar` → `calendario de disponibilidad`
-- `24-hour availability` → `disponibilidad de 24 horas`
+- `weekly availability` → `disponibilidad de 24 horas`
 - `deep learning protocol` → `protocolo de aprendizaje profundo`
 - `state interface` → `interfaz de estado`
 - `aim interface` → `interfaz de objetivo`
@@ -180,20 +180,20 @@ string arabic = qt.Translate("quality translation", CoreTranslation.Language.Ara
 **Supported Translations:**
 - `quality translation` → `ترجمة الجودة`
 - `uptime calendar` → `تقويم المدة الزمنية`
-- `24-hour availability` → `توفر 24 ساعة`
+- `weekly availability` → `توفر 24 ساعة`
 - And more...
 
 ### Translation to French
 
 ```csharp
-string french = qt.Translate("24-hour availability", CoreTranslation.Language.French);
+string french = qt.Translate("weekly availability", CoreTranslation.Language.French);
 // Returns: "disponibilité 24 heures"
 ```
 
 **Supported Translations:**
 - `quality translation` → `traduction de qualité`
 - `uptime calendar` → `calendrier de disponibilité`
-- `24-hour availability` → `disponibilité 24 heures`
+- `weekly availability` → `disponibilité 24 heures`
 - And more...
 
 ---
