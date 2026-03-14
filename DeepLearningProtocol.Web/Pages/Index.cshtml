@@ -6,38 +6,41 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-8">
             <h1>Agent Conference</h1>
-            <div id="messages" class="border p-3 mb-3" style="height: 300px; overflow-y: scroll;"></div>
-            <div class="input-group mb-3">
-                <input type="text" id="userInput" class="form-control" placeholder="Enter your message..." />
-                <button id="sendButton" class="btn btn-primary">Send</button>
-            </div>
-            <div class="input-group mb-3">
-                <input type="text" id="voteInput" class="form-control" placeholder="Enter your vote..." />
-                <button id="voteButton" class="btn btn-success">Vote</button>
-            </div>
-            <button id="startConferenceButton" class="btn btn-warning">Start Conference</button>
+            <div id="unifiedOutput" class="border p-3 mb-3" style="height: 500px; overflow-y: scroll; background-color: #f8f9fa;"></div>
         </div>
-        <div class="col-md-6">
-            <h2>Image Processing</h2>
-            <form enctype="multipart/form-data" method="post" asp-action="UploadImage">
-                <div class="mb-3">
-                    <input type="file" name="imageFile" accept="image/*" class="form-control" />
-                </div>
-                <button type="submit" class="btn btn-info">Process Image</button>
-            </form>
-            @if (ViewData["ImageResult"] != null)
-            {
-                <div class="mt-3">
-                    <h4>Processing Result:</h4>
-                    <pre>@ViewData["ImageResult"]</pre>
-                </div>
-            }
-            <h3>Agents</h3>
-            <ul id="agents" class="list-group"></ul>
-            <h3>Votes</h3>
-            <ul id="votes" class="list-group"></ul>
+        <div class="col-md-4">
+            <h3>Input & Controls</h3>
+            
+            <!-- Message and Rating Input -->
+            <div class="input-group mb-3">
+                <input type="text" id="userInput" class="form-control" placeholder="Enter your message or rate content..." />
+                <select id="ratingSelect" class="form-select" style="max-width: 100px;">
+                    <option value="1">★</option>
+                    <option value="2">★★</option>
+                    <option value="3" selected>★★★</option>
+                    <option value="4">★★★★</option>
+                    <option value="5">★★★★★</option>
+                </select>
+                <button id="sendButton" class="btn btn-primary">Send/Rate</button>
+            </div>
+
+            <!-- Image Processing -->
+            <div class="mb-3">
+                <label class="form-label">Upload Instruction Image:</label>
+                <form enctype="multipart/form-data" method="post" asp-action="UploadImage" id="imageForm">
+                    <input type="file" name="imageFile" accept="image/*" class="form-control mb-2" id="imageFile" />
+                    <button type="submit" class="btn btn-info btn-sm">Process & Add to Chat</button>
+                </form>
+            </div>
+
+            <!-- Agents and Ratings -->
+            <h4>Agents</h4>
+            <ul id="agents" class="list-group mb-3"></ul>
+            
+            <h4>Ratings</h4>
+            <ul id="ratings" class="list-group"></ul>
         </div>
     </div>
 </div>
@@ -51,41 +54,99 @@
 
         connection.on("ReceiveMessage", (user, message) => {
             const msg = document.createElement("div");
-            msg.textContent = `${user}: ${message}`;
-            document.getElementById("messages").appendChild(msg);
+            msg.className = "mb-2 p-2 bg-white border rounded";
+            msg.innerHTML = `<strong>${user}:</strong> ${message}`;
+            document.getElementById("unifiedOutput").appendChild(msg);
+            document.getElementById("unifiedOutput").scrollTop = document.getElementById("unifiedOutput").scrollHeight;
         });
 
-        connection.on("ReceiveVote", (agent, vote) => {
-            const voteItem = document.createElement("li");
-            voteItem.className = "list-group-item";
-            voteItem.textContent = `${agent}: ${vote}`;
-            document.getElementById("votes").appendChild(voteItem);
+        connection.on("ReceiveRating", (agent, rating) => {
+            const ratingItem = document.createElement("li");
+            ratingItem.className = "list-group-item";
+            ratingItem.innerHTML = `${agent}: <span class="text-warning">${'★'.repeat(parseInt(rating))}</span> (${rating}/5)`;
+            document.getElementById("ratings").appendChild(ratingItem);
+            
+            // Also show rating in unified output
+            const ratingMsg = document.createElement("div");
+            ratingMsg.className = "mb-2 p-2 bg-light border rounded text-center";
+            ratingMsg.innerHTML = `<em>${agent} rated the content: ${'★'.repeat(parseInt(rating))} (${rating}/5)</em>`;
+            document.getElementById("unifiedOutput").appendChild(ratingMsg);
+            document.getElementById("unifiedOutput").scrollTop = document.getElementById("unifiedOutput").scrollHeight;
+        });
+
+        connection.on("ReceiveImageLog", (log) => {
+            const logEntry = document.createElement("div");
+            logEntry.className = "mb-2 p-2 bg-info border rounded";
+            logEntry.innerHTML = `<small class="text-muted">[Image Processing]</small><br>${log.replace(/\n/g, '<br>')}`;
+            document.getElementById("unifiedOutput").appendChild(logEntry);
+            document.getElementById("unifiedOutput").scrollTop = document.getElementById("unifiedOutput").scrollHeight;
         });
 
         connection.on("ConferenceStarted", () => {
             const msg = document.createElement("div");
-            msg.textContent = "Conference started!";
-            document.getElementById("messages").appendChild(msg);
+            msg.className = "mb-2 p-2 bg-success border rounded text-center";
+            msg.innerHTML = "<strong>🎉 Conference Started!</strong>";
+            document.getElementById("unifiedOutput").appendChild(msg);
+            document.getElementById("unifiedOutput").scrollTop = document.getElementById("unifiedOutput").scrollHeight;
         });
 
-        connection.start().catch(err => console.error(err.toString()));
+        connection.start().then(() => {
+            // Auto-start conference when connection is established
+            connection.invoke("StartConference").catch(err => console.error(err.toString()));
+        }).catch(err => console.error(err.toString()));
 
         document.getElementById("sendButton").addEventListener("click", () => {
             const user = "WebUser";
-            const message = document.getElementById("userInput").value;
-            connection.invoke("SendMessage", user, message).catch(err => console.error(err.toString()));
-            document.getElementById("userInput").value = "";
+            const message = document.getElementById("userInput").value.trim();
+            const rating = document.getElementById("ratingSelect").value;
+            
+            if (message) {
+                // Send message
+                connection.invoke("SendMessage", user, message).catch(err => console.error(err.toString()));
+                document.getElementById("userInput").value = "";
+            } else {
+                // Send rating
+                connection.invoke("SendRating", user, rating).catch(err => console.error(err.toString()));
+            }
         });
 
-        document.getElementById("voteButton").addEventListener("click", () => {
-            const agent = "WebUser";
-            const vote = document.getElementById("voteInput").value;
-            connection.invoke("SendVote", agent, vote).catch(err => console.error(err.toString()));
-            document.getElementById("voteInput").value = "";
+        // Allow Enter key to send
+        document.getElementById("userInput").addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+                document.getElementById("sendButton").click();
+            }
         });
 
-        document.getElementById("startConferenceButton").addEventListener("click", () => {
-            connection.invoke("StartConference").catch(err => console.error(err.toString()));
+        // Handle image form submission via AJAX
+        document.getElementById("imageForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            const fileInput = document.getElementById("imageFile");
+            
+            if (fileInput.files.length === 0) {
+                alert("Please select an image file first.");
+                return;
+            }
+            
+            formData.append("imageFile", fileInput.files[0]);
+            
+            try {
+                const response = await fetch("/?handler=UploadImage", {
+                    method: "POST",
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    // Clear the file input
+                    fileInput.value = "";
+                    // The extracted text will be sent to chat via SignalR
+                } else {
+                    console.error("Failed to upload image");
+                }
+            } catch (error) {
+                console.error("Error uploading image:", error);
+            }
         });
     </script>
 }

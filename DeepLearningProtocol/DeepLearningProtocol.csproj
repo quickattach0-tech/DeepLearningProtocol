@@ -5,7 +5,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Version>3.1</Version>
+    <Version>4.0.0.0</Version>
     <Title>Deep Learning Protocol</Title>
     <Description>A hierarchical multi-interface reasoning system with Core Translation capabilities, multi-language support, weekly uptime tracking, and enterprise-grade code management.</Description>
     <Authors>quickattach0-tech</Authors>

@@ -1,12 +1,24 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.SignalR;
 using System.IO;
 using System.Threading.Tasks;
+using DeepLearningProtocol.Web.Hubs;
+using Tesseract;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace DeepLearningProtocol.Web.Pages;
 
 public class IndexModel : PageModel
 {
+    private readonly IHubContext<ChatHub> _hubContext;
+
+    public IndexModel(IHubContext<ChatHub> hubContext)
+    {
+        _hubContext = hubContext;
+    }
+
     public void OnGet()
     {
 
@@ -29,13 +41,30 @@ public class IndexModel : PageModel
 
         try
         {
-            // Basic image analysis (simplified version)
-            var result = AnalyzeImage(tempPath);
-            ViewData["ImageResult"] = result;
+            // Perform OCR on the uploaded image
+            string extractedText = ExtractTextFromImage(tempPath);
+            
+            // Send the extracted text as a message to the conference
+            await _hubContext.Clients.All.SendAsync("ReceiveMessage", "InstructionReader", 
+                $"📄 Extracted from {Path.GetFileName(imageFile.FileName)}: {extractedText}");
+            
+            // Also log the processing details
+            await _hubContext.Clients.All.SendAsync("ReceiveImageLog", 
+                $"[{DateTime.Now:HH:mm:ss}] Processed {Path.GetFileName(imageFile.FileName)}\n" +
+                $"File size: {imageFile.Length} bytes\n" +
+                $"Upload time: {DateTime.Now}\n" +
+                $"Extracted text length: {extractedText.Length} characters");
+
+            ViewData["ImageResult"] = $"Text extracted and added to chat: {extractedText}";
         }
         catch (Exception ex)
         {
-            ViewData["ImageResult"] = $"Error processing image: {ex.Message}";
+            var errorMsg = $"Error processing image: {ex.Message}";
+            ViewData["ImageResult"] = errorMsg;
+
+            // Broadcast error to conference
+            await _hubContext.Clients.All.SendAsync("ReceiveMessage", "InstructionReader", 
+                $"❌ Error reading instruction: {errorMsg}");
         }
         finally
         {
@@ -47,14 +76,25 @@ public class IndexModel : PageModel
         return Page();
     }
 
-    private string AnalyzeImage(string imagePath)
+    private string ExtractTextFromImage(string imagePath)
     {
-        // Simplified analysis - in real app, use CoreTranslation.ProcessImage
-        var fileInfo = new FileInfo(imagePath);
-        return $"Image processed successfully!\n" +
-               $"File size: {fileInfo.Length} bytes\n" +
-               $"File name: {Path.GetFileName(imagePath)}\n" +
-               $"Upload time: {DateTime.Now}\n\n" +
-               $"Note: Full OCR and translation processing available in console app.";
+        try
+        {
+            using (var engine = new TesseractEngine("./tessdata", "eng", EngineMode.Default))
+            {
+                using (var img = Pix.LoadFromFile(imagePath))
+                {
+                    using (var page = engine.Process(img))
+                    {
+                        string extractedText = page.GetText().Trim();
+                        return extractedText.Length > 0 ? extractedText : "No text detected in image.";
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            return $"OCR failed: {ex.Message}";
+        }
     }
 }

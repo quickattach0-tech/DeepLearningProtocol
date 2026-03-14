@@ -201,7 +201,7 @@ namespace DeepLearningProtocol
             try
             {
                 var logFile = Path.Combine(_metricsDir, $"uptime_{DateTime.UtcNow:yyyyMMdd}.log");
-                var logEntry = $"[{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss}] Hour {hour}: Event recorded\n";
+                var logEntry = $"[{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss}] Hour {DateTime.UtcNow.Hour}: Event recorded\n";
                 File.AppendAllText(logFile, logEntry);
             }
             catch
@@ -634,6 +634,11 @@ namespace DeepLearningProtocol
                 return $"OCR failed: {ex.Message}";
             }
         }
+
+        /// <summary>
+        /// Extracts features from image for analysis
+        /// </summary>
+        private double[] ExtractImageFeatures(Image<Rgba32> image)
         {
             var features = new List<double>();
 

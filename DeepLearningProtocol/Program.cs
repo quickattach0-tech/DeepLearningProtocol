@@ -56,11 +56,13 @@ namespace DeepLearningProtocol
                 Console.WriteLine($"Error processing image: {ex.Message}");
             }
         }
+
+        static async Task RunAsAgent(string[] args)
         {
-            string agentName = args.Length > 1 ? args[1] : "Agent1";
+            string agentName = args.Length > 1 ? args[1] : "DLP";
             var protocol = new DeepLearningProtocol();
             var connection = new HubConnectionBuilder()
-                .WithUrl("http://localhost:5000/chatHub")
+                .WithUrl("http://localhost:5033/chatHub")
                 .Build();
 
             connection.On<string, string>("ReceiveMessage", async (user, message) =>
@@ -73,18 +75,26 @@ namespace DeepLearningProtocol
                 await connection.InvokeAsync("SendMessage", agentName, $"Analysis: {result.Substring(0, Math.Min(100, result.Length))}");
             });
 
-            connection.On<string, string>("ReceiveVote", (agent, vote) =>
+            connection.On<string, string>("ReceiveRating", (agent, rating) =>
             {
-                Console.WriteLine($"{agent} voted: {vote}");
+                Console.WriteLine($"{agent} rated: {rating}/5 stars");
             });
 
             connection.On("ConferenceStarted", async () =>
             {
                 Console.WriteLine("Conference started! Agent is thinking...");
-                // Perform reasoning to decide vote
-                var reasoning = protocol.ExecuteProtocol("Should I vote yes on this proposal?", "Make voting decision", 2);
-                string vote = reasoning.Contains("yes") || reasoning.Contains("approve") ? "Yes" : "No";
-                await connection.InvokeAsync("SendVote", agentName, vote);
+                // Perform reasoning to decide rating
+                var reasoning = protocol.ExecuteProtocol("Rate the quality of this discussion on a scale of 1-5", "Make rating decision", 2);
+                // Extract rating from reasoning (simple heuristic)
+                int rating = 3; // default
+                if (reasoning.Contains("excellent") || reasoning.Contains("5")) rating = 5;
+                else if (reasoning.Contains("good") || reasoning.Contains("4")) rating = 4;
+                else if (reasoning.Contains("average") || reasoning.Contains("3")) rating = 3;
+                else if (reasoning.Contains("poor") || reasoning.Contains("2")) rating = 2;
+                else if (reasoning.Contains("terrible") || reasoning.Contains("1")) rating = 1;
+                
+                await connection.InvokeAsync("SendRating", agentName, rating.ToString());
+                Console.WriteLine($"{agentName} rated: {rating}/5");
             });
 
             await connection.StartAsync();
