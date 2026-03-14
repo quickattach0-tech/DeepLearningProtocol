@@ -1,0 +1,52 @@
+# Multi-stage build Dockerfile for Deep Learning Protocol Web App
+# Optimized for minimal image size and runtime performance
+
+# Stage 1: Build stage
+FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS builder
+
+WORKDIR /src
+
+# Copy solution and project files
+COPY DeepLearningProtocol.sln .
+COPY Directory.Build.props .
+COPY DeepLearningProtocol/DeepLearningProtocol.csproj ./DeepLearningProtocol/
+COPY DeepLearningProtocol.Web/DeepLearningProtocol.Web.csproj ./DeepLearningProtocol.Web/
+
+# Restore dependencies
+RUN dotnet restore DeepLearningProtocol.sln
+
+# Copy source code
+COPY . .
+
+# Build the web application
+RUN dotnet build DeepLearningProtocol.Web/DeepLearningProtocol.Web.csproj --configuration Release --no-restore
+
+# Publish the web application
+RUN dotnet publish DeepLearningProtocol.Web/DeepLearningProtocol.Web.csproj \
+    --configuration Release \
+    --no-build \
+    --output /app/publish
+
+
+# Stage 2: Runtime stage
+FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine
+
+WORKDIR /app
+
+# Create directory for DLP backups
+RUN mkdir -p .dlp_backups
+
+# Copy published application from builder stage
+COPY --from=builder /app/publish .
+
+# Add labels for metadata
+LABEL maintainer="Deep Learning Protocol Contributors"
+LABEL description="Deep Learning Protocol Web - A hierarchical multi-interface reasoning system with Data Loss Prevention"
+LABEL version="4.0.0.0"
+
+# Expose port 80 for HTTP and 443 for HTTPS
+EXPOSE 80
+EXPOSE 443
+
+# Set entry point
+ENTRYPOINT ["dotnet", "DeepLearningProtocol.Web.dll"]

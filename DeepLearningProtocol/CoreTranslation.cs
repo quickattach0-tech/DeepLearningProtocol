@@ -43,6 +43,9 @@ namespace DeepLearningProtocol
         /// <summary>Spanish translation dictionary (cached)</summary>
         public static readonly Dictionary<string, string> Spanish = new(StringComparer.OrdinalIgnoreCase)
         {
+            { "hello world", "hola mundo" },
+            { "hello", "hola" },
+            { "goodbye", "adiós" },
             { "quality translation", "traducción de calidad" },
             { "uptime calendar", "calendario de disponibilidad" },
             { "weekly availability", "disponibilidad semanal" },
@@ -55,6 +58,8 @@ namespace DeepLearningProtocol
         /// <summary>Arabic translation dictionary (cached)</summary>
         public static readonly Dictionary<string, string> Arabic = new(StringComparer.OrdinalIgnoreCase)
         {
+            { "hello", "مرحبا" },
+            { "goodbye", "وداعا" },
             { "quality translation", "ترجمة الجودة" },
             { "uptime calendar", "تقويم المدة الزمنية" },
             { "weekly availability", "توفر أسبوعي" },
@@ -67,6 +72,8 @@ namespace DeepLearningProtocol
         /// <summary>French translation dictionary (cached)</summary>
         public static readonly Dictionary<string, string> French = new(StringComparer.OrdinalIgnoreCase)
         {
+            { "goodbye", "au revoir" },
+            { "hello", "bonjour" },
             { "quality translation", "traduction de qualité" },
             { "uptime calendar", "calendrier de disponibilité" },
             { "weekly availability", "disponibilité hebdomadaire" },
