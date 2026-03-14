@@ -19,7 +19,7 @@ namespace DeepLearningProtocol
                 "  • Depth Interface (recursive processing)\n" +
                 "  • Aim Interface (goal-directed exploration)\n" +
                 "  • State Interface (state management)\n" +
-                "  • Quality Translation (QT) for multi-language content protection"
+                "  • Core Translation (CT) for multi-language content protection"
             )},
             { 2, (
                 "How do I run the program?",
@@ -29,7 +29,7 @@ namespace DeepLearningProtocol
                 "  3. Interactive: Run it and follow the menu prompts"
             )},
             { 3, (
-                "What is Quality Translation (QT)?",
+                "What is Core Translation (CT)?",
                 "A protective layer that:\n" +
                 "  • Assesses content quality (0-100 score)\n" +
                 "  • Supports 4 languages: English, Spanish, Arabic, French\n" +
@@ -64,11 +64,11 @@ namespace DeepLearningProtocol
             )},
             { 8, (
                 "What happens if I input low-quality content?",
-                "The QT (Quality Translation) layer:\n" +
+                "The CT (Core Translation) layer:\n" +
                 "  • Assesses content quality (0-100 score)\n" +
                 "  • Blocks updates with score < 30\n" +
                 "  • Records metrics and uptime events\n" +
-                "  • Sets state to [QT-BLOCKED] to preserve data integrity"
+                "  • Sets state to [CT-BLOCKED] to preserve data integrity"
             )},
             { 9, (
                 "How do I extend the project?",

@@ -6,6 +6,7 @@ namespace DeepLearningProtocol.Tests
     public class DeepLearningProtocolTests
     {
         private readonly DeepLearningProtocol _protocol = new();
+        private readonly CoreTranslation _ct = new();
 
         [Fact]
         public void GetCurrentState_ReturnsInitialState()
@@ -85,6 +86,79 @@ namespace DeepLearningProtocol.Tests
             Assert.Contains("[Abstract Core] Deep abstract processing: [Abstract Core] Deep abstract processing: Raw Data", result);
             Assert.Contains("towards Test Goal", result);
             Assert.Equal("Depth 2 processed", _protocol.GetCurrentState());
+        }
+
+        // Core Translation Tests
+        [Fact]
+        public void CoreTranslation_AssessQuality_HighQualityContent_ReturnsHighScore()
+        {
+            // Act
+            var score = _ct.AssessQuality("This is a well-written, properly formatted sentence with good grammar.");
+
+            // Assert
+            Assert.True(score >= 70);
+        }
+
+        [Fact]
+        public void CoreTranslation_AssessQuality_LowQualityContent_ReturnsLowScore()
+        {
+            // Act
+            var score = _ct.AssessQuality("bad");
+
+            // Assert
+            Assert.True(score < 30);
+        }
+
+        [Fact]
+        public void CoreTranslation_Translate_EnglishToSpanish_ReturnsTranslatedText()
+        {
+            // Act
+            var result = _ct.Translate("hello world", CoreTranslation.Language.Spanish);
+
+            // Assert
+            Assert.Equal("hola mundo", result);
+        }
+
+        [Fact]
+        public void CoreTranslation_Translate_EnglishToArabic_ReturnsTranslatedText()
+        {
+            // Act
+            var result = _ct.Translate("hello", CoreTranslation.Language.Arabic);
+
+            // Assert
+            Assert.Equal("مرحبا", result);
+        }
+
+        [Fact]
+        public void CoreTranslation_Translate_EnglishToFrench_ReturnsTranslatedText()
+        {
+            // Act
+            var result = _ct.Translate("goodbye", CoreTranslation.Language.French);
+
+            // Assert
+            Assert.Equal("au revoir", result);
+        }
+
+        [Fact]
+        public void CoreTranslation_RecordUptimeEvent_IncreasesUptimeCount()
+        {
+            // Act
+            var before = _ct.GetUptimeCalendar();
+            _ct.RecordUptimeEvent();
+            var after = _ct.GetUptimeCalendar();
+
+            // Assert
+            Assert.True(after.Count >= before.Count);
+        }
+
+        [Fact]
+        public void CoreTranslation_GetUptimePercentage_ReturnsValidPercentage()
+        {
+            // Act
+            var percentage = _ct.GetUptimePercentage();
+
+            // Assert
+            Assert.True(percentage >= 0 && percentage <= 100);
         }
     }
 }

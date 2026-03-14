@@ -1,6 +1,6 @@
 # Deep Learning Protocol
 
-> A hierarchical multi-interface reasoning system with Quality Translation (QT) capabilities, multi-language support, 24-hour uptime tracking, and enterprise-grade code management.
+> A hierarchical multi-interface reasoning system with Core Translation (CT) capabilities, multi-language support, 24-hour uptime tracking, and enterprise-grade code management.
 
 [![CI/CD Status](https://github.com/quickattach0-tech/DeepLearningProtocol/actions/workflows/dotnet.yml/badge.svg)](https://github.com/quickattach0-tech/DeepLearningProtocol/actions/workflows/dotnet.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -9,13 +9,13 @@
 
 ---
 
-## 🎉 v3.1 Release: Quality Translation & 24-Hour Uptime!
+## 🎉 v3.1 Release: Core Translation & 24-Hour Uptime!
 
 > **What's New in v3.1?**
 >
-> Major feature release introducing **Quality Translation (QT)** system:
+> Major feature release introducing **Core Translation (CT)** system:
 >
-> - 🌍 **Quality Translation (QT)** — Replaces DLP with multi-language support (English, Spanish, Arabic, French)
+> - 🌍 **Core Translation (CT)** — Replaces DLP with multi-language support (English, Spanish, Arabic, French)
 > - ⏰ **24-Hour Uptime Calendar** — Real-time hourly availability tracking with metrics
 > - 🎯 **Quality Scoring** — Content assessment system (0-100 scale) for data integrity
 > - 📊 **Translation Metrics** — Store and analyze translation quality across all languages
@@ -32,7 +32,7 @@ This application is an **AI-enhanced hierarchical reasoning system** that proces
 
 ### **Core Capabilities**
 - 📊 **Multi-layer Reasoning**: Process information through AbstractCore, State, Depth, and Aim interfaces
-- 🌍 **Quality Translation (QT)**: Multi-language support with quality scoring for 4 languages
+- 🌍 **Core Translation (CT)**: Multi-language support with quality scoring for 4 languages
 - ⏰ **24-Hour Uptime Calendar**: Real-time hourly tracking of system availability and events
 - 💾 **Persistent Storage**: SQL Server integration with Entity Framework Core 9.0.0
 - 📊 **Quality Metrics**: Assess, score, and store translation quality (0-100 scale)
@@ -42,14 +42,14 @@ This application is an **AI-enhanced hierarchical reasoning system** that proces
 - 🧠 **Adaptive Processing**: Configurable depth levels (1-10) for reasoning complexity
 - 🔐 **Data Integrity**: Quality-aware blocking of low-quality updates
 - 📚 **Interactive Learning**: FAQ system, translator, and protocol documentation built-in
-- 🎯 **v3.1 New**: Quality Translation replacing Data Loss Prevention
+- 🎯 **v3.1 New**: Core Translation replacing Data Loss Prevention
 - 🚀 **Latest Packages**: EF Core 9.0.0, .NET Test SDK 17.13.0
 
 ---
 
 ## 🎯 Key Features
 
-- **Quality Translation System** — Multi-language support (English, Spanish, Arabic, French) with quality assessment
+- **Core Translation System** — Multi-language support (English, Spanish, Arabic, French) with quality assessment
 - **24-Hour Uptime Calendar** — Hourly tracking of system availability with real-time metrics
 - **Hierarchical Architecture** — Multi-interface design with AbstractCore, State, Depth, and Aim layers
 - **Quality Scoring** — Content assessment (0-100 scale) with configurable thresholds
@@ -77,7 +77,7 @@ This application is an **AI-enhanced hierarchical reasoning system** that proces
 | **Language Learners** | [Translator Feature](docs/TRANSLATOR_FEATURE.md) | Multi-language translation guide |
 | **Database Users** | [Translation Management](docs/TRANSLATION_DATABASE.md) | Store and manage translations |
 | **Code Reviewers** | [Code Repository](docs/CODE_REPOSITORY.md) | Review workflows and quality tracking |
-| **Security-minded** | [Quality Translation Guide](docs/QUALITY_TRANSLATION_GUIDE.md) | QT system deep dive |
+| **Security-minded** | [Core Translation Guide](docs/CORE_TRANSLATION_GUIDE.md) | CT system deep dive |
 | **Testers** | [Testing Guide](docs/Testing.md) | Writing and running tests |
 | **Contributors** | [Contributing](CONTRIBUTING.md) | Development workflow & standards |
 | **All** | [Full Wiki](https://github.com/quickattach0-tech/DeepLearningProtocol/wiki) | Complete reference |
@@ -202,7 +202,7 @@ Recommended changes: Add XML documentation comments
 ✓ Auto-calculated priority: 2 (score 87 = low priority)
 ```
 
-### Quality Translation Response
+### Core Translation Response
 ```
 ✓ Quality Assessment: Content quality score: 85/100
 ✓ Translation to Spanish: "protocolo de aprendizaje profundo"
@@ -240,7 +240,7 @@ INTERFACE OPERATIONS:
   • Aim.SetGoal(): Define strategic objective
   • Depth.Process(level): Recursive analysis at level 1-10
   • State.Save(): Persist current state to database
-  • QT.AssessQuality(): Check content quality (0-100)
+  • CT.AssessQuality(): Check content quality (0-100)
 
 ════════════════════════════════════════════════════════
 ```
@@ -258,7 +258,7 @@ The protocol implements four core components:
 | **IDepthInterface** | Recursive hierarchical processing | N-level depth control |
 | **IStateInterface** | State management | Current state tracking & updates |
 
-**Plus**: `QualityTranslation (QT)` layer assesses content quality with multi-language support and uptime tracking.
+**Plus**: `CoreTranslation (CT)` layer assesses content quality with multi-language support and uptime tracking.
 
 ---
 
@@ -267,7 +267,7 @@ The protocol implements four core components:
 ```
 DeepLearningProtocol/
 ├── DeepLearningProtocol/              Core protocol implementation
-│   ├── Program.cs                     Main logic + QT + Menu system
+│   ├── Program.cs                     Main logic + CT + Menu system
 │   └── DeepLearningProtocol.csproj
 ├── DeepLearningProtocol.Tests/        Unit tests (8 tests, all passing)
 ├── docs/                              Comprehensive documentation
@@ -284,9 +284,9 @@ DeepLearningProtocol/
 - Custom input questions
 - Goal-directed processing
 - Configurable depth levels (1-10)
-- QT-protected state management
+- CT-protected state management
 
-### Quality Translation (QT)
+### Core Translation (CT)
 Multi-language support with quality assessment:
 - **4 Languages**: English, Spanish, Arabic, French
 - **Quality Scoring**: 0-100 scale with configurable thresholds
@@ -298,7 +298,7 @@ Multi-language support with quality assessment:
 Browse pre-written answers about:
 - How to use the protocol
 - Architecture details
-- Quality Translation functionality
+- Core Translation functionality
 - Customization options
 
 ---
@@ -319,7 +319,7 @@ Input Query
     ↓
 [Layer 4: IStateInterface] → State tracking & memory management
     ↓
-[QT Layer: Quality Translation] → Multi-language support & uptime tracking
+[CT Layer: Core Translation] → Multi-language support & uptime tracking
     ↓
 Output Response
 ```
@@ -331,7 +331,7 @@ Output Response
   - Level 10: Deep philosophical reasoning
 - **Goal-Directed Intelligence**: Define strategic aims for processing
 - **State Persistence**: All states backed up automatically to database
-- **Quality Assessment**: QT system validates content quality (0-100)
+- **Quality Assessment**: CT system validates content quality (0-100)
 - **Multi-Language Support**: Translate to Spanish, Arabic, or French
 - **Adaptive Learning**: Translation rules and patterns stored in SQL
 
@@ -340,7 +340,7 @@ Output Response
 |---------|-----------------|---------|
 | **Translator AI** | 60+ phrase database with ML scoring | Multi-language with quality feedback |
 | **Code Analysis** | Quality scoring (0-100) with priority | Automated code review workflows |
-| **Quality Assessment** | QT scanning for content quality | Data integrity + multi-language support |
+| **Quality Assessment** | CT scanning for content quality | Data integrity + multi-language support |
 | **Command Learning** | Store and execute custom patterns | Extensible protocol behavior |
 | **State Management** | Hierarchical state tracking | Recoverable from any point |
 

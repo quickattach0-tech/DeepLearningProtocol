@@ -1,8 +1,8 @@
-# Quality Translation (QT) System Guide
+# Core Translation (CT) System Guide
 
 ## Overview
 
-**Quality Translation (QT)** is a replacement for the previous Data Loss Prevention (DLP) system, offering enhanced capabilities through multi-language support, quality scoring, and 24-hour uptime tracking. It provides a comprehensive approach to content validation with global language awareness.
+**Core Translation (CT)** is a replacement for the previous Data Loss Prevention (DLP) system, offering enhanced capabilities through multi-language support, quality scoring, and 24-hour uptime tracking. It provides a comprehensive approach to content validation with global language awareness.
 
 Version: **3.1+**
 
@@ -12,7 +12,7 @@ Version: **3.1+**
 
 ### 1. **Multi-Language Support**
 
-QT supports 4 languages with full translation capabilities:
+CT supports 4 languages with full translation capabilities:
 
 | Language | Code | Primary Use | Example |
 |----------|------|-------------|---------|
@@ -60,7 +60,7 @@ Content is assessed on a **0-100 scale** with multiple criteria:
 #### Example Quality Assessment
 
 ```csharp
-var qt = new QualityTranslation();
+var qt = new CoreTranslation();
 
 // Assess content quality
 int score = qt.AssessQuality("This is well-formatted content with proper punctuation.");
@@ -133,11 +133,11 @@ public class QualityMetric
 qt.StoreQualityMetric(
     content: "Original text",
     qualityScore: 85,
-    language: QualityTranslation.Language.English,
+    language: CoreTranslation.Language.English,
     translatedContent: "Texto original"
 );
 
-// Metrics saved to: ./.qt_metrics/quality_YYYYMMDD.json
+// Metrics saved to: ./.ct_metrics/quality_YYYYMMDD.json
 ```
 
 #### Retrieving Metrics
@@ -157,7 +157,7 @@ var metrics7d = qt.GetQualityMetrics(hoursBack: 168);
 ### Translation to Spanish
 
 ```csharp
-string spanish = qt.Translate("deep learning protocol", QualityTranslation.Language.Spanish);
+string spanish = qt.Translate("deep learning protocol", CoreTranslation.Language.Spanish);
 // Returns: "protocolo de aprendizaje profundo"
 ```
 
@@ -173,7 +173,7 @@ string spanish = qt.Translate("deep learning protocol", QualityTranslation.Langu
 ### Translation to Arabic
 
 ```csharp
-string arabic = qt.Translate("quality translation", QualityTranslation.Language.Arabic);
+string arabic = qt.Translate("quality translation", CoreTranslation.Language.Arabic);
 // Returns: "ترجمة الجودة"
 ```
 
@@ -186,7 +186,7 @@ string arabic = qt.Translate("quality translation", QualityTranslation.Language.
 ### Translation to French
 
 ```csharp
-string french = qt.Translate("24-hour availability", QualityTranslation.Language.French);
+string french = qt.Translate("24-hour availability", CoreTranslation.Language.French);
 // Returns: "disponibilité 24 heures"
 ```
 
@@ -205,7 +205,7 @@ string french = qt.Translate("24-hour availability", QualityTranslation.Language
 ```csharp
 public class DeepLearningProtocol : AbstractCore, IAimInterface, IDepthInterface, IStateInterface
 {
-    private readonly QualityTranslation _qt = new();
+    private readonly CoreTranslation _qt = new();
 
     public void UpdateState(string newState)
     {
@@ -215,9 +215,9 @@ public class DeepLearningProtocol : AbstractCore, IAimInterface, IDepthInterface
         // Block if quality score too low
         if (qualityScore < 30)
         {
-            Console.WriteLine("QT: Content quality score too low. State update blocked.");
-            _qt.StoreQualityMetric(newState, qualityScore, QualityTranslation.Language.English, "");
-            _currentState = "[QT-BLOCKED]";
+            Console.WriteLine("CT: Content quality score too low. State update blocked.");
+            _qt.StoreQualityMetric(newState, qualityScore, CoreTranslation.Language.English, "");
+            _currentState = "[CT-BLOCKED]";
             return;
         }
 
@@ -233,11 +233,11 @@ public class DeepLearningProtocol : AbstractCore, IAimInterface, IDepthInterface
 ```csharp
 public class StringCommandExecutor
 {
-    private readonly QualityTranslation _qt;
+    private readonly CoreTranslation _qt;
 
-    public StringCommandExecutor(ProtocolDbContext context, DeepLearningProtocol protocol, QualityTranslation qt)
+    public StringCommandExecutor(ProtocolDbContext context, DeepLearningProtocol protocol, CoreTranslation qt)
     {
-        _qt = qt ?? new QualityTranslation();
+        _qt = qt ?? new CoreTranslation();
     }
 
     public string ExecuteCommand(string commandName, string? input = null)
@@ -249,8 +249,8 @@ public class StringCommandExecutor
             if (qualityScore < 30)
             {
                 _qt.StoreQualityMetric(command.CommandPattern, qualityScore, 
-                    QualityTranslation.Language.English, "");
-                return "[QT-BLOCKED] Command pattern quality score too low.";
+                    CoreTranslation.Language.English, "");
+                return "[CT-BLOCKED] Command pattern quality score too low.";
             }
             // Record uptime event
             _qt.RecordUptimeEvent();
@@ -267,7 +267,7 @@ public class StringCommandExecutor
 ### Directory Structure
 
 ```
-./.qt_metrics/
+./.ct_metrics/
 ├── quality_20260125.json    # Daily quality metrics (JSON)
 ├── quality_20260126.json    # Daily quality metrics
 └── uptime_20260125.log      # Hourly uptime log
@@ -321,10 +321,10 @@ When processing international content:
 int score = qt.AssessQuality(content);
 
 // Determine language and translate
-string spanish = qt.Translate(content, QualityTranslation.Language.Spanish);
+string spanish = qt.Translate(content, CoreTranslation.Language.Spanish);
 
 // Store metrics
-qt.StoreQualityMetric(content, score, QualityTranslation.Language.English, spanish);
+qt.StoreQualityMetric(content, score, CoreTranslation.Language.English, spanish);
 
 // Track uptime
 qt.RecordUptimeEvent();
@@ -372,16 +372,16 @@ else
 
 ---
 
-## 🚀 Migration from DLP to QT
+## 🚀 Migration from DLP to CT
 
 ### Breaking Changes
 
-| Aspect | DLP (Old) | QT (New) |
+| Aspect | DLP (Old) | CT (New) |
 |--------|-----------|---------|
 | **Method** | `IsPotentialMeme()` | `AssessQuality()` |
 | **Return Value** | Boolean | Integer (0-100) |
 | **Backup Method** | `BackupState()` | Metrics storage |
-| **Storage** | `./.dlp_backups/` | `./.qt_metrics/` |
+| **Storage** | `./.dlp_backups/` | `./.ct_metrics/` |
 | **Languages** | None | 4 languages |
 
 ### Migration Code
@@ -394,11 +394,11 @@ if (dlp.IsPotentialMeme(content)) {
     // Block
 }
 
-// NEW (QT)
-var qt = new QualityTranslation();
+// NEW (CT)
+var qt = new CoreTranslation();
 int score = qt.AssessQuality(content);
 if (score < 30) {
-    qt.StoreQualityMetric(content, score, QualityTranslation.Language.English, "");
+    qt.StoreQualityMetric(content, score, CoreTranslation.Language.English, "");
     // Block
 }
 ```
@@ -452,9 +452,9 @@ else
 
 ## ❓ FAQ
 
-**Q: What's the difference between DLP and QT?**
+**Q: What's the difference between DLP and CT?**
 
-A: DLP was a binary (safe/unsafe) filter. QT is a nuanced 0-100 quality scoring system with multi-language support and uptime tracking, enabling fine-grained content validation.
+A: DLP was a binary (safe/unsafe) filter. CT is a nuanced 0-100 quality scoring system with multi-language support and uptime tracking, enabling fine-grained content validation.
 
 **Q: Can I configure the quality threshold?**
 
@@ -470,9 +470,9 @@ A: Currently, translations are static in the `Translate()` method. Extend the me
 
 **Q: What happens to old DLP backups?**
 
-A: DLP backups in `./.dlp_backups/` are not automatically migrated. Archive them manually if needed; QT uses `./.qt_metrics/` instead.
+A: DLP backups in `./.dlp_backups/` are not automatically migrated. Archive them manually if needed; CT uses `./.ct_metrics/` instead.
 
-**Q: Does QT affect performance?**
+**Q: Does CT affect performance?**
 
 A: Minimal impact. Quality assessment is O(n) in content length. Uptime tracking is O(1). Metrics storage is asynchronous (best-effort).
 
@@ -482,7 +482,7 @@ A: Minimal impact. Quality assessment is O(n) in content length. Uptime tracking
 
 - [Architecture Guide](Architecture.md) — System design
 - [Getting Started](Getting-Started.md) — Quick start guide
-- [Testing Guide](Testing.md) — Writing tests for QT
+- [Testing Guide](Testing.md) — Writing tests for CT
 - [README](../README.md) — Main project overview
 
 ---
@@ -491,7 +491,7 @@ A: Minimal impact. Quality assessment is O(n) in content length. Uptime tracking
 
 | Version | Date | Change |
 |---------|------|--------|
-| **3.1** | 2026-01-25 | Initial QT implementation |
+| **3.1** | 2026-01-25 | Initial CT implementation |
 | **3.0** | 2025-12-XX | Last DLP version |
 
 ---

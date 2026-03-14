@@ -74,14 +74,14 @@ namespace DeepLearningProtocol
     }
 
     /// <summary>
-    /// QualityTranslation (QT) is a multi-language, uptime-aware system that validates content quality
+    /// CoreTranslation (CT) is a multi-language, uptime-aware system that validates content quality
     /// and provides real-time translation across 4 supported languages with 24-hour uptime tracking.
     /// It replaces the previous DataLossPrevention layer with enhanced language support and availability monitoring.
     /// </summary>
-    public class QualityTranslation
+    public class CoreTranslation
     {
         /// <summary>Directory path for storing quality metrics and uptime logs</summary>
-        private readonly string _metricsDir = "./.qt_metrics";
+        private readonly string _metricsDir = "./.ct_metrics";
 
         /// <summary>Supported languages: English, Spanish, Arabic, French</summary>
         public enum Language { English, Spanish, Arabic, French }
@@ -119,7 +119,7 @@ namespace DeepLearningProtocol
         /// Initializes the QT system with metrics directory and uptime calendar.
         /// Gracefully handles IO errors in restricted environments.
         /// </summary>
-        public QualityTranslation()
+        public CoreTranslation()
         {
             try
             {

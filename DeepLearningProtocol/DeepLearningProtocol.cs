@@ -15,8 +15,8 @@ namespace DeepLearningProtocol
         /// <summary>Tracks the current goal/aim</summary>
         private string _aim = "General Reasoning";
         
-        /// <summary>QT instance for quality translation and uptime tracking</summary>
-        private readonly QualityTranslation _qt = new();
+        /// <summary>CT instance for core translation and uptime tracking</summary>
+        private readonly CoreTranslation _ct = new();
 
         /// <summary>
         /// Gets the current state of the protocol.
@@ -32,20 +32,20 @@ namespace DeepLearningProtocol
         public void UpdateState(string newState)
         {
             // Assess quality before changing state
-            int qualityScore = _qt.AssessQuality(newState);
+            int qualityScore = _ct.AssessQuality(newState);
             
             // If quality score is too low, block it
             if (qualityScore < 30)
             {
-                Console.WriteLine("QT: Content quality score too low. State update blocked.");
-                _qt.StoreQualityMetric(newState, qualityScore, QualityTranslation.Language.English, "");
+                Console.WriteLine("CT: Content quality score too low. State update blocked.");
+                _ct.StoreQualityMetric(newState, qualityScore, CoreTranslation.Language.English, "");
 
-                _currentState = $"[QT-BLOCKED]";
+                _currentState = $"[CT-BLOCKED]";
                 return;
             }
 
             _currentState = newState;
-            _qt.RecordUptimeEvent();
+            _ct.RecordUptimeEvent();
             Console.WriteLine($"State updated: {_currentState}");
         }
 

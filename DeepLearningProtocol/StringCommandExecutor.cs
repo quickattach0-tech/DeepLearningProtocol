@@ -13,14 +13,14 @@ namespace DeepLearningProtocol
     {
         private readonly ProtocolDbContext _context;
         private readonly DeepLearningProtocol _protocol;
-        private readonly QualityTranslation _qt;
+        private readonly CoreTranslation _ct;
 
         /// <summary>Initializes the command executor with database context and protocol</summary>
-        public StringCommandExecutor(ProtocolDbContext context, DeepLearningProtocol protocol, QualityTranslation qt)
+        public StringCommandExecutor(ProtocolDbContext context, DeepLearningProtocol protocol, CoreTranslation ct)
         {
             _context = context ?? new ProtocolDbContext();
             _protocol = protocol ?? new DeepLearningProtocol();
-            _qt = qt ?? new QualityTranslation();
+            _ct = ct ?? new CoreTranslation();
         }
 
         /// <summary>
@@ -37,17 +37,17 @@ namespace DeepLearningProtocol
                 if (command == null)
                     return $"[ERROR] Command '{commandName}' not found or disabled.";
 
-                // Check Quality Translation protection
+                // Check Core Translation protection
                 if (command.ApplyDLPProtection)
                 {
-                    var qualityScore = _qt.AssessQuality(command.CommandPattern);
+                    var qualityScore = _ct.AssessQuality(command.CommandPattern);
                     if (qualityScore < 30)
                     {
-                        _qt.StoreQualityMetric(command.CommandPattern, qualityScore, QualityTranslation.Language.English, "");
-                        return "[QT-BLOCKED] Command pattern quality score too low.";
+                        _ct.StoreQualityMetric(command.CommandPattern, qualityScore, CoreTranslation.Language.English, "");
+                        return "[CT-BLOCKED] Command pattern quality score too low.";
                     }
                     // Record uptime event
-                    _qt.RecordUptimeEvent();
+                    _ct.RecordUptimeEvent();
                 }
 
                 // Execute through protocol with configured depth

@@ -24,6 +24,7 @@ namespace DeepLearningProtocol
         static async Task RunAsAgent(string[] args)
         {
             string agentName = args.Length > 1 ? args[1] : "Agent1";
+            var protocol = new DeepLearningProtocol();
             var connection = new HubConnectionBuilder()
                 .WithUrl("http://localhost:5000/chatHub")
                 .Build();
@@ -31,8 +32,11 @@ namespace DeepLearningProtocol
             connection.On<string, string>("ReceiveMessage", async (user, message) =>
             {
                 Console.WriteLine($"{user}: {message}");
-                // Agent thinking logic here
-                // Use the DeepLearningProtocol reasoning
+                // Agent thinking: process the message through the protocol
+                var result = protocol.ExecuteProtocol(message, "Analyze message", 1);
+                Console.WriteLine($"{agentName} analysis: {result}");
+                // Could send response back to chat
+                await connection.InvokeAsync("SendMessage", agentName, $"Analysis: {result.Substring(0, Math.Min(100, result.Length))}");
             });
 
             connection.On<string, string>("ReceiveVote", (agent, vote) =>
@@ -43,9 +47,10 @@ namespace DeepLearningProtocol
             connection.On("ConferenceStarted", async () =>
             {
                 Console.WriteLine("Conference started! Agent is thinking...");
-                // Perform reasoning and vote
-                // For demo, send a vote
-                await connection.InvokeAsync("SendVote", agentName, "Yes");
+                // Perform reasoning to decide vote
+                var reasoning = protocol.ExecuteProtocol("Should I vote yes on this proposal?", "Make voting decision", 2);
+                string vote = reasoning.Contains("yes") || reasoning.Contains("approve") ? "Yes" : "No";
+                await connection.InvokeAsync("SendVote", agentName, vote);
             });
 
             await connection.StartAsync();
