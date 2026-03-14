@@ -5,6 +5,7 @@ using System.Linq;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
+using Tesseract;
 
 namespace DeepLearningProtocol
 {
@@ -74,6 +75,30 @@ namespace DeepLearningProtocol
             { "aim interface", "interface d'objectif" },
             { "depth interface", "interface de profondeur" }
         };
+
+        /// <summary>German translation dictionary (cached)</summary>
+        public static readonly Dictionary<string, string> German = new(StringComparer.OrdinalIgnoreCase)
+        {
+            { "quality translation", "Qualitätsübersetzung" },
+            { "uptime calendar", "Verfügbarkeitskalender" },
+            { "weekly availability", "wöchentliche Verfügbarkeit" },
+            { "deep learning protocol", "Deep Learning Protokoll" },
+            { "state interface", "Statusschnittstelle" },
+            { "aim interface", "Zielschnittstelle" },
+            { "depth interface", "Tiefenschnittstelle" }
+        };
+
+        /// <summary>Italian translation dictionary (cached)</summary>
+        public static readonly Dictionary<string, string> Italian = new(StringComparer.OrdinalIgnoreCase)
+        {
+            { "quality translation", "traduzione di qualità" },
+            { "uptime calendar", "calendario disponibilità" },
+            { "weekly availability", "disponibilità settimanale" },
+            { "deep learning protocol", "protocollo di apprendimento profondo" },
+            { "state interface", "interfaccia di stato" },
+            { "aim interface", "interfaccia obiettivo" },
+            { "depth interface", "interfaccia profondità" }
+        };
     }
 
     /// <summary>
@@ -86,8 +111,8 @@ namespace DeepLearningProtocol
         /// <summary>Directory path for storing quality metrics and uptime logs</summary>
         private readonly string _metricsDir = "./.ct_metrics";
 
-        /// <summary>Supported languages: English, Spanish, Arabic, French</summary>
-        public enum Language { English, Spanish, Arabic, French }
+        /// <summary>Supported languages: English, Spanish, Arabic, French, German, Italian</summary>
+        public enum Language { English, Spanish, Arabic, French, German, Italian }
 
         /// <summary>Language codes for mapping</summary>
         private static readonly Dictionary<Language, string> LanguageCodes = new()
@@ -95,7 +120,9 @@ namespace DeepLearningProtocol
             { Language.English, "en" },
             { Language.Spanish, "es" },
             { Language.Arabic, "ar" },
-            { Language.French, "fr" }
+            { Language.French, "fr" },
+            { Language.German, "de" },
+            { Language.Italian, "it" }
         };
 
         /// <summary>Weekly uptime tracking (daily buckets for 7 days)</summary>
@@ -294,6 +321,8 @@ namespace DeepLearningProtocol
                 Language.Spanish => TranslateToSpanish(content),
                 Language.Arabic => TranslateToArabic(content),
                 Language.French => TranslateToFrench(content),
+                Language.German => TranslateToGerman(content),
+                Language.Italian => TranslateToItalian(content),
                 _ => content // English: return as-is
             };
         }
@@ -331,6 +360,18 @@ namespace DeepLearningProtocol
                     System.Text.RegularExpressions.RegexOptions.IgnoreCase);
             }
             return result;
+        }
+
+        /// <summary>Translates common protocol terms to German</summary>
+        private string TranslateToGerman(string content)
+        {
+            return ReplaceTerms(content, TranslationDictionaries.German);
+        }
+
+        /// <summary>Translates common protocol terms to Italian</summary>
+        private string TranslateToItalian(string content)
+        {
+            return ReplaceTerms(content, TranslationDictionaries.Italian);
         }
 
         /// <summary>
@@ -477,12 +518,15 @@ namespace DeepLearningProtocol
                     // Extract features for deep learning analysis
                     result.Features = ExtractImageFeatures(image);
 
-                    // If text detected, attempt translation (placeholder for OCR integration)
+                    // If text detected, attempt OCR and translation
                     if (result.ContainsText)
                     {
-                        result.ExtractedText = "Text detected but OCR not implemented"; // Placeholder
-                        result.TranslatedText = Translate(result.ExtractedText, CurrentLanguage);
-                        result.TranslationQuality = AssessQuality(result.TranslatedText);
+                        result.ExtractedText = ExtractTextWithOCR(imagePath);
+                        if (!string.IsNullOrEmpty(result.ExtractedText))
+                        {
+                            result.TranslatedText = Translate(result.ExtractedText, CurrentLanguage);
+                            result.TranslationQuality = AssessQuality(result.TranslatedText);
+                        }
                     }
 
                     // Store quality metric for the processing
@@ -567,9 +611,29 @@ namespace DeepLearningProtocol
         }
 
         /// <summary>
-        /// Extracts numerical features from the image for deep learning analysis
+        /// Extracts text from image using OCR
         /// </summary>
-        private double[] ExtractImageFeatures(Image<Rgba32> image)
+        private string ExtractTextWithOCR(string imagePath)
+        {
+            try
+            {
+                using (var engine = new TesseractEngine("./tessdata", "eng", EngineMode.Default))
+                {
+                    using (var img = Pix.LoadFromFile(imagePath))
+                    {
+                        using (var page = engine.Process(img))
+                        {
+                            return page.GetText().Trim();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Fallback if OCR fails
+                return $"OCR failed: {ex.Message}";
+            }
+        }
         {
             var features = new List<double>();
 

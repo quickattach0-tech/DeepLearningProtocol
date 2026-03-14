@@ -15,13 +15,47 @@ namespace DeepLearningProtocol
             {
                 await RunAsAgent(args);
             }
+            else if (args.Length > 0 && args[0] == "process-image")
+            {
+                ProcessInstructionImage();
+            }
             else
             {
                 MenuSystem.DisplayMainMenu();
             }
         }
 
-        static async Task RunAsAgent(string[] args)
+        static void ProcessInstructionImage()
+        {
+            var ct = new CoreTranslation();
+            var imagePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "Instructions", "Instruction.png");
+            
+            try
+            {
+                var result = ct.ProcessImage(imagePath);
+                
+                Console.WriteLine("=== Image Processing Results ===");
+                Console.WriteLine($"Image: {result.ImagePath}");
+                Console.WriteLine($"Dimensions: {result.Width}x{result.Height}");
+                Console.WriteLine($"Contains Text: {result.ContainsText}");
+                Console.WriteLine($"Extracted Text: {result.ExtractedText}");
+                Console.WriteLine($"Translated Text: {result.TranslatedText}");
+                Console.WriteLine($"Translation Quality: {result.TranslationQuality}");
+                
+                if (result.ColorAnalysis != null && result.ColorAnalysis.Any())
+                {
+                    Console.WriteLine("Top Colors:");
+                    foreach (var color in result.ColorAnalysis.Take(5))
+                    {
+                        Console.WriteLine($"  {color.Key}: {color.Value:F1}%");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing image: {ex.Message}");
+            }
+        }
         {
             string agentName = args.Length > 1 ? args[1] : "Agent1";
             var protocol = new DeepLearningProtocol();

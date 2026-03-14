@@ -49,7 +49,7 @@ This application is an **AI-enhanced hierarchical reasoning system** that proces
 
 ## 🎯 Key Features
 
-- **Core Translation System** — Multi-language support (English, Spanish, Arabic, French) with quality assessment
+- **Core Translation System** — Multi-language support (English, Spanish, Arabic, French, German, Italian) with quality assessment
 - **Weekly Uptime Calendar** — Daily tracking of system availability with real-time metrics
 - **Image Processing** — Analyze images with feature extraction, color analysis, and text detection
 - **Hierarchical Architecture** — Multi-interface design with AbstractCore, State, Depth, and Aim layers

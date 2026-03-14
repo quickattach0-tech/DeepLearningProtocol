@@ -140,6 +140,26 @@ namespace DeepLearningProtocol.Tests
         }
 
         [Fact]
+        public void CoreTranslation_Translate_EnglishToGerman_ReturnsTranslatedText()
+        {
+            // Act
+            var result = _ct.Translate("deep learning protocol", CoreTranslation.Language.German);
+
+            // Assert
+            Assert.Equal("Deep Learning Protokoll", result);
+        }
+
+        [Fact]
+        public void CoreTranslation_Translate_EnglishToItalian_ReturnsTranslatedText()
+        {
+            // Act
+            var result = _ct.Translate("quality translation", CoreTranslation.Language.Italian);
+
+            // Assert
+            Assert.Equal("traduzione di qualità", result);
+        }
+
+        [Fact]
         public void CoreTranslation_RecordUptimeEvent_IncreasesUptimeCount()
         {
             // Act
