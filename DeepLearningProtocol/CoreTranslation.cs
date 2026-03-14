@@ -372,6 +372,75 @@ namespace DeepLearningProtocol
         }
 
         /// <summary>
+        /// Single testing system for translations: translates core text multiple times and validates consistency.
+        /// </summary>
+        /// <param name="coreText">The core text to translate and test</param>
+        /// <param name="targetLanguage">Target language for translation</param>
+        /// <param name="iterations">Number of translation iterations to perform</param>
+        /// <returns>Test results with consistency score and quality metrics</returns>
+        public TranslationTestResult TestTranslation(string coreText, Language targetLanguage, int iterations = 5)
+        {
+            var results = new List<string>();
+            var qualityScores = new List<int>();
+            var timestamps = new List<DateTime>();
+
+            for (int i = 0; i < iterations; i++)
+            {
+                var translated = Translate(coreText, targetLanguage);
+                results.Add(translated);
+                
+                var quality = AssessQuality(translated);
+                qualityScores.Add(quality);
+                
+                timestamps.Add(DateTime.UtcNow);
+                
+                // Store metric
+                StoreQualityMetric(translated, quality, targetLanguage, coreText);
+                
+                // Small delay to simulate processing
+                System.Threading.Thread.Sleep(10);
+            }
+
+            // Calculate consistency (how many unique results)
+            var uniqueResults = results.Distinct().Count();
+            var consistencyScore = (iterations - uniqueResults + 1) * 100 / iterations;
+
+            // Average quality
+            var avgQuality = qualityScores.Average();
+
+            return new TranslationTestResult
+            {
+                CoreText = coreText,
+                TargetLanguage = targetLanguage,
+                Iterations = iterations,
+                Results = results,
+                QualityScores = qualityScores,
+                Timestamps = timestamps,
+                ConsistencyScore = consistencyScore,
+                AverageQuality = avgQuality,
+                IsConsistent = uniqueResults == 1,
+                TestTimestamp = DateTime.UtcNow
+            };
+        }
+
+        /// <summary>
+        /// Result structure for translation testing
+        /// </summary>
+        public class TranslationTestResult
+        {
+            public string? CoreText { get; set; }
+            public Language TargetLanguage { get; set; }
+            public int Iterations { get; set; }
+            public List<string>? Results { get; set; }
+            public List<int>? QualityScores { get; set; }
+            public List<DateTime>? Timestamps { get; set; }
+            public int ConsistencyScore { get; set; } // 0-100
+            public double AverageQuality { get; set; }
+            public bool IsConsistent { get; set; }
+            public DateTime TestTimestamp { get; set; }
+        }
+
+        /// <summary>
         /// Gets all stored quality metrics within a specified timeframe.
         /// </summary>
         /// <param name="hoursBack">Number of hours to look back (default: 168 for weekly)</param>

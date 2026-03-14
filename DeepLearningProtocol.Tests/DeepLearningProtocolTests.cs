@@ -152,13 +152,45 @@ namespace DeepLearningProtocol.Tests
         }
 
         [Fact]
-        public void CoreTranslation_GetUptimePercentage_ReturnsValidPercentage()
+        public void CoreTranslation_TestTranslation_SingleIteration_ReturnsValidResult()
         {
             // Act
-            var percentage = _ct.GetUptimePercentage();
+            var result = _ct.TestTranslation("hello world", CoreTranslation.Language.Spanish, 1);
 
             // Assert
-            Assert.True(percentage >= 0 && percentage <= 100);
+            Assert.Equal("hello world", result.CoreText);
+            Assert.Equal(CoreTranslation.Language.Spanish, result.TargetLanguage);
+            Assert.Equal(1, result.Iterations);
+            Assert.Single(result.Results);
+            Assert.Single(result.QualityScores);
+            Assert.Single(result.Timestamps);
+            Assert.True(result.ConsistencyScore >= 0 && result.ConsistencyScore <= 100);
+        }
+
+        [Fact]
+        public void CoreTranslation_TestTranslation_MultipleIterations_CalculatesConsistency()
+        {
+            // Act
+            var result = _ct.TestTranslation("deep learning protocol", CoreTranslation.Language.French, 3);
+
+            // Assert
+            Assert.Equal(3, result.Iterations);
+            Assert.Equal(3, result.Results.Count);
+            Assert.Equal(3, result.QualityScores.Count);
+            Assert.Equal(3, result.Timestamps.Count);
+            Assert.True(result.ConsistencyScore >= 0 && result.ConsistencyScore <= 100);
+            Assert.True(result.AverageQuality >= 0 && result.AverageQuality <= 100);
+        }
+
+        [Fact]
+        public void CoreTranslation_TestTranslation_ConsistentTranslations_ReturnsHighConsistency()
+        {
+            // Act
+            var result = _ct.TestTranslation("goodbye", CoreTranslation.Language.Spanish, 5);
+
+            // Assert
+            Assert.True(result.ConsistencyScore >= 80); // Should be highly consistent for simple translations
+            Assert.True(result.IsConsistent); // All results should be the same
         }
     }
 }
