@@ -47,7 +47,33 @@ This application is an **AI-enhanced hierarchical reasoning system** that proces
 
 ---
 
-## 🎯 Key Features
+## � Web Hosting
+
+The project includes a web application for the agent conference system.
+
+### Local Development
+```bash
+cd DeepLearningProtocol.Web
+dotnet run
+```
+Access at: `http://localhost:5000`
+
+### Docker Deployment
+```bash
+docker build -t deeplearningprotocol .
+docker run -p 8080:80 deeplearningprotocol
+```
+
+### Azure Deployment
+The project includes GitHub Actions for automatic Azure Web App deployment.
+
+1. Create an Azure Web App
+2. Add `AZURE_WEBAPP_PUBLISH_PROFILE` secret to GitHub repository
+3. Push to main branch to trigger deployment
+
+---
+
+## �🎯 Key Features
 
 - **Core Translation System** — Multi-language support (English, Spanish, Arabic, French, German, Italian) with quality assessment
 - **Weekly Uptime Calendar** — Daily tracking of system availability with real-time metrics
