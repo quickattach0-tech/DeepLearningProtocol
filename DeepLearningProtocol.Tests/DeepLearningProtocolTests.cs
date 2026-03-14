@@ -192,5 +192,33 @@ namespace DeepLearningProtocol.Tests
             Assert.True(result.ConsistencyScore >= 80); // Should be highly consistent for simple translations
             Assert.True(result.IsConsistent); // All results should be the same
         }
+
+        // Image Processing Tests
+        [Fact]
+        public void CoreTranslation_ProcessImage_NonExistentFile_ThrowsException()
+        {
+            // Act & Assert
+            Assert.Throws<FileNotFoundException>(() => _ct.ProcessImage("nonexistent.png"));
+        }
+
+        [Fact]
+        public void CoreTranslation_ProcessImage_ValidImage_ReturnsResult()
+        {
+            // Arrange - Use the instruction.png from the Instructions folder
+            var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..", "Instructions", "Instruction.png");
+
+            // Act
+            var result = _ct.ProcessImage(imagePath);
+
+            // Assert
+            Assert.True(result.Success);
+            Assert.Equal(imagePath, result.ImagePath);
+            Assert.True(result.Width > 0);
+            Assert.True(result.Height > 0);
+            Assert.True(result.PixelCount > 0);
+            Assert.NotNull(result.ColorAnalysis);
+            Assert.NotNull(result.Features);
+            Assert.True(result.Features.Length > 0);
+        }
     }
 }

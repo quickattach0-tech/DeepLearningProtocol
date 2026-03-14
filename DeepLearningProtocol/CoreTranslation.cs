@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 
 namespace DeepLearningProtocol
 {
@@ -438,6 +441,188 @@ namespace DeepLearningProtocol
             public double AverageQuality { get; set; }
             public bool IsConsistent { get; set; }
             public DateTime TestTimestamp { get; set; }
+        }
+
+        /// <summary>
+        /// Processes an image using deep learning protocol analysis.
+        /// Extracts features, analyzes content, and applies translation if text is detected.
+        /// </summary>
+        /// <param name="imagePath">Path to the image file</param>
+        /// <returns>Image processing result with analysis and features</returns>
+        public ImageProcessingResult ProcessImage(string imagePath)
+        {
+            if (!File.Exists(imagePath))
+                throw new FileNotFoundException("Image file not found", imagePath);
+
+            var result = new ImageProcessingResult
+            {
+                ImagePath = imagePath,
+                ProcessingTimestamp = DateTime.UtcNow
+            };
+
+            try
+            {
+                using (var image = Image.Load<Rgba32>(imagePath))
+                {
+                    result.Width = image.Width;
+                    result.Height = image.Height;
+                    result.PixelCount = image.Width * image.Height;
+
+                    // Analyze color distribution
+                    result.ColorAnalysis = AnalyzeColorDistribution(image);
+
+                    // Detect if image contains text (simple heuristic)
+                    result.ContainsText = DetectTextContent(image);
+
+                    // Extract features for deep learning analysis
+                    result.Features = ExtractImageFeatures(image);
+
+                    // If text detected, attempt translation (placeholder for OCR integration)
+                    if (result.ContainsText)
+                    {
+                        result.ExtractedText = "Text detected but OCR not implemented"; // Placeholder
+                        result.TranslatedText = Translate(result.ExtractedText, CurrentLanguage);
+                        result.TranslationQuality = AssessQuality(result.TranslatedText);
+                    }
+
+                    // Store quality metric for the processing
+                    StoreQualityMetric($"Image processed: {Path.GetFileName(imagePath)}", 
+                                     result.ContainsText ? 80 : 60, 
+                                     CurrentLanguage, 
+                                     $"Image analysis result: {result.Width}x{result.Height}");
+
+                    result.Success = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Success = false;
+                result.ErrorMessage = ex.Message;
+                result.ProcessingTimestamp = DateTime.UtcNow;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Analyzes color distribution in the image
+        /// </summary>
+        private Dictionary<string, double> AnalyzeColorDistribution(Image<Rgba32> image)
+        {
+            var colors = new Dictionary<string, int>();
+            long totalPixels = 0;
+
+            image.ProcessPixelRows(accessor =>
+            {
+                for (int y = 0; y < accessor.Height; y++)
+                {
+                    var pixelRow = accessor.GetRowSpan(y);
+                    for (int x = 0; x < pixelRow.Length; x++)
+                    {
+                        var pixel = pixelRow[x];
+                        var colorKey = $"{pixel.R},{pixel.G},{pixel.B}";
+                        if (!colors.ContainsKey(colorKey))
+                            colors[colorKey] = 0;
+                        colors[colorKey]++;
+                        totalPixels++;
+                    }
+                }
+            });
+
+            // Calculate percentages for top colors
+            var topColors = colors.OrderByDescending(c => c.Value)
+                                 .Take(10)
+                                 .ToDictionary(c => c.Key, c => (double)c.Value / totalPixels * 100);
+
+            return topColors;
+        }
+
+        /// <summary>
+        /// Simple heuristic to detect if image contains text
+        /// </summary>
+        private bool DetectTextContent(Image<Rgba32> image)
+        {
+            // Simple text detection based on contrast and patterns
+            // This is a placeholder - real OCR would be needed for accurate detection
+            int highContrastPixels = 0;
+            int totalPixels = 0;
+
+            image.ProcessPixelRows(accessor =>
+            {
+                for (int y = 0; y < accessor.Height; y++)
+                {
+                    var pixelRow = accessor.GetRowSpan(y);
+                    for (int x = 0; x < pixelRow.Length; x++)
+                    {
+                        var pixel = pixelRow[x];
+                        // Check for high contrast (potential text edges)
+                        if (Math.Abs(pixel.R - pixel.G) > 50 || Math.Abs(pixel.G - pixel.B) > 50 || Math.Abs(pixel.R - pixel.B) > 50)
+                            highContrastPixels++;
+                        totalPixels++;
+                    }
+                }
+            });
+
+            return (double)highContrastPixels / totalPixels > 0.1; // 10% high contrast suggests text
+        }
+
+        /// <summary>
+        /// Extracts numerical features from the image for deep learning analysis
+        /// </summary>
+        private double[] ExtractImageFeatures(Image<Rgba32> image)
+        {
+            var features = new List<double>();
+
+            // Basic features
+            features.Add(image.Width);
+            features.Add(image.Height);
+            features.Add((double)image.Width / image.Height); // Aspect ratio
+
+            // Color statistics
+            double avgR = 0, avgG = 0, avgB = 0;
+            int count = 0;
+
+            image.ProcessPixelRows(accessor =>
+            {
+                for (int y = 0; y < accessor.Height; y++)
+                {
+                    var pixelRow = accessor.GetRowSpan(y);
+                    for (int x = 0; x < pixelRow.Length; x++)
+                    {
+                        var pixel = pixelRow[x];
+                        avgR += pixel.R;
+                        avgG += pixel.G;
+                        avgB += pixel.B;
+                        count++;
+                    }
+                }
+            });
+
+            features.Add(avgR / count); // Average red
+            features.Add(avgG / count); // Average green
+            features.Add(avgB / count); // Average blue
+
+            return features.ToArray();
+        }
+
+        /// <summary>
+        /// Result structure for image processing
+        /// </summary>
+        public class ImageProcessingResult
+        {
+            public string? ImagePath { get; set; }
+            public bool Success { get; set; }
+            public string? ErrorMessage { get; set; }
+            public DateTime ProcessingTimestamp { get; set; }
+            public int Width { get; set; }
+            public int Height { get; set; }
+            public int PixelCount { get; set; }
+            public Dictionary<string, double>? ColorAnalysis { get; set; }
+            public bool ContainsText { get; set; }
+            public string? ExtractedText { get; set; }
+            public string? TranslatedText { get; set; }
+            public int TranslationQuality { get; set; }
+            public double[]? Features { get; set; }
         }
 
         /// <summary>
